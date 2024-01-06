@@ -18,7 +18,7 @@
         </n-icon>
       </Btn>
     </template>
-    删除后将不可恢复！
+    刀下留人～，死而不能复生！
   </n-popconfirm>
 </template>
 
@@ -54,9 +54,9 @@ const handleDelete = async() =>  {
   reload()
 };
 
-const tips = {
-  edit: "编辑",
-  delete: "删除",
-  detail: "详情"
-};
+// const tips = {
+//   edit: "编辑",
+//   delete: "删除",
+//   detail: "详情"
+// };
 </script>
