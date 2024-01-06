@@ -24,9 +24,9 @@ export default defineConfig(({ command }) => {
   return {
     plugins: [
       vue({
-        // script:{
-        //   defineModel:true,
-        // }
+        script:{
+          defineModel:true,
+        }
       }),
       ViteFonts({
         google: {
