@@ -1,12 +1,28 @@
+import type { ComponentPublicInstance, VNodeNormalizedChildren } from 'vue';
+import { Dayjs } from 'dayjs';
+import { VNode } from 'vue';
+
 const opt = Object.prototype.toString;
 
 export function isArray(obj: any): obj is any[] {
   return opt.call(obj) === '[object Array]';
 }
 
-export function isObject(obj: any): obj is { [key: string]: any } {
+export function isNull(obj: any): obj is null {
+  return opt.call(obj) === '[object Null]';
+}
+
+export function isBoolean(obj: unknown): obj is boolean {
+  return opt.call(obj) === '[object Boolean]';
+}
+
+export function isObject(obj: any): obj is Record<string, unknown> {
   return opt.call(obj) === '[object Object]';
 }
+
+export const isPromise = <T>(obj: unknown): obj is Promise<T> => {
+  return opt.call(obj) === '[object Promise]';
+};
 
 export function isString(obj: any): obj is string {
   return opt.call(obj) === '[object String]';
@@ -20,20 +36,28 @@ export function isRegExp(obj: any) {
   return opt.call(obj) === '[object RegExp]';
 }
 
-export function isFile(obj: any): obj is File {
-  return opt.call(obj) === '[object File]';
+export function isDate(obj: any) {
+  return opt.call(obj) === '[object Date]';
 }
 
-export function isBlob(obj: any): obj is Blob {
-  return opt.call(obj) === '[object Blob]';
+function isHex(color: any) {
+  return /^#[a-fA-F0-9]{3}$|#[a-fA-F0-9]{6}$/.test(color);
+}
+
+function isRgb(color: any) {
+  return /^rgb\((\s*\d+\s*,?){3}\)$/.test(color);
+}
+
+function isRgba(color: any) {
+  return /^rgba\((\s*\d+\s*,\s*){3}\s*\d(\.\d+)?\s*\)$/.test(color);
+}
+
+export function isColor(color: any): boolean {
+  return isHex(color) || isRgb(color) || isRgba(color);
 }
 
 export function isUndefined(obj: any): obj is undefined {
   return obj === undefined;
-}
-
-export function isNull(obj: any): obj is null {
-  return obj === null;
 }
 
 export function isFunction(obj: any): obj is (...args: any[]) => any {
@@ -50,4 +74,33 @@ export function isExist(obj: any): boolean {
 
 export function isWindow(el: any): el is Window {
   return el === window;
+}
+
+export const isComponentInstance = (
+  value: any
+): value is ComponentPublicInstance => {
+  return value?.$ !== undefined;
+};
+
+export const isArrayChildren = (
+  children: VNodeNormalizedChildren
+): children is VNode[] => {
+  return isArray(children);
+};
+
+export const isQuarter = (fromat: string) => {
+  return /\[Q]Q/.test(fromat);
+};
+
+export function isDayjs(time: any): time is Dayjs {
+  return (
+    isObject(time) &&
+    '$y' in time &&
+    '$M' in time &&
+    '$D' in time &&
+    '$d' in time &&
+    '$H' in time &&
+    '$m' in time &&
+    '$s' in time
+  );
 }

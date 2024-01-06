@@ -1,37 +1,30 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import NProgress from 'nprogress'; // progress bar
-import 'nprogress/nprogress.css';
+import { createRouter, createWebHistory } from "vue-router";
 
-import { appRoutes } from './routes';
-import { REDIRECT_MAIN, NOT_FOUND_ROUTE } from './routes/base';
-import createRouteGuard from './guard';
-
-NProgress.configure({ showSpinner: false }); // NProgress Configuration
+const routesModule:Record<string, {default:any}> = import.meta.glob("./routes/**/*.ts", { eager: true });
+const routes = Object.keys(routesModule).map(key => routesModule[key].default)
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
-      redirect: 'login',
+      path: "/",
+      component: () => import("@/views/login.vue")
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/views/login/index.vue'),
-      meta: {
-        requiresAuth: false,
-      },
+      path: "/icons",
+      name: "icons",
+      component: () => import("@/views/icons.vue")
+    }, {
+      path: "/:pathMatch(.*)*",
+      name: "notFound",
+      component: () => import("@/views/not-found.vue")
     },
-    ...appRoutes,
-    REDIRECT_MAIN,
-    NOT_FOUND_ROUTE,
+    ...routes
   ],
+
   scrollBehavior() {
     return { top: 0 };
-  },
+  }
 });
-
-createRouteGuard(router);
 
 export default router;

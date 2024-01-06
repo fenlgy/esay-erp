@@ -1,0 +1,30 @@
+export const tagColor = {
+  orange:{
+    textColor:'#FF7D00FF',
+    color:'#FFF7E8FF'
+  },
+  blueGreen:{
+    textColor:'#0FC6C2FF',
+    color:'#E8FFFBFF'
+  },
+  green:{
+    textColor:'#00B42AFF',
+    color:'#E8FFEAFF'
+  },
+  gray:{
+    textColor:'#4E5969FF',
+    color:'#f1f2f5'
+  },
+  blue:{
+    textColor:'#2969FFFF',
+    color:'#eef8ff'
+  },
+  red:{
+    textColor:'#F53F3FFF',
+    color:'#FFECE8FF'
+  },
+  golden:{
+    textColor:'#ffd580',
+    color:'#383838'
+  }
+}
