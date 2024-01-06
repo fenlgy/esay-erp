@@ -5,9 +5,9 @@
         <form-item label="品名" path="name" required>
           <n-input v-model:value="data.name" />
         </form-item>
-        <form-item label="英文名称" path="ename">
-          <n-input v-model:value="data.ename" />
-        </form-item>
+<!--        <form-item label="英文名称" path="ename">-->
+<!--          <n-input v-model:value="data.ename" />-->
+<!--        </form-item>-->
         <form-item label="单位" path="unit" required>
           <unit-select v-model:value="data.unit" />
         </form-item>
@@ -23,25 +23,17 @@
 <script setup lang="ts">
 import { addProduct, deleteProduct, getProducts, GoodsDetail } from "@/api/products.ts";
 import { GoodsInfo } from "@/views/goods/typs.ts";
-import { renderEnableOrDisableTag } from "@/utils/render.tsx";
-import Btn from "@/components/basic/button/btn.vue";
 import { timeFormat } from "@/utils/common.ts";
 import PagesList from "@/components/pages/pages-list.vue";
 import TableActionButtons from "@/components/basic/button/table-action-buttons.vue";
 import TableColumnsSwitch from "@/components/basic/switch/table-columns-switch.vue";
+import { renderTableLinkButton } from "@/utils/render.tsx";
 
-const hh = ref(0);
 const data = ref(<GoodsDetail>{});
 const columns = [
   {
     title: "品名", key: "name", render(row: GoodsDetail) {
-      return h(Btn, {
-        size: "small",
-        text: true,
-        tag: "a",
-        to: `/goods/detail/${row.id}`,
-        type: "primary"
-      }, { default: () => row.name });
+      return h(renderTableLinkButton(`/goods/detail/${row.id}`,row.name))
     }
   },
   { title: "英文名", key: "ename" },

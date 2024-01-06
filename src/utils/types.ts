@@ -26,3 +26,10 @@ export interface MyResponse<T> {
 export type MyResponseWithData<T> = MyResponse<T> & { data: T }
 
 export type MyBoolean = 0 | 1; // 0 false / 1 true
+
+export type BasicDataInfo = {
+  id: number
+  createdTime: string
+  updatedTime: string
+  disabled: MyBoolean
+}

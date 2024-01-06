@@ -16,7 +16,7 @@
 <script setup lang="ts">
 
 import { addWarehouse, deleteWarehouse } from "@/api/system.ts";
-import { renderTableSwitch } from "@/utils/render.tsx";
+import { renderTableLinkButton, renderTableSwitch } from "@/utils/render.tsx";
 import { GoodsDetail } from "@/api/products.ts";
 import TableActionButtons from "@/components/basic/button/table-action-buttons.vue";
 import { getScrmList, SCInfo } from "@/api/scrm.ts";
@@ -26,16 +26,22 @@ import ScNatureTag from "@/components/basic/tag/sc-nature-tag.vue";
 const data = ref({});
 
 const columns = [
-  { title: "名称", key: "name" },
   {
-    title: "类型", key: "type",
-    render(row:SCInfo) {
-      return h(ScTypeTag,{type:row.type});
+    title: "名称", key: "name", render(row: SCInfo) {
+      return h(renderTableLinkButton(`/scrm/edit/${row.id}`, row.name));
     }
   },
-  { title: "性质", key: "isPersonal",render(row:SCInfo){
-    return h(ScNatureTag,{type:row.isPersonal})
-    } },
+  {
+    title: "类型", key: "type",
+    render(row: SCInfo) {
+      return h(ScTypeTag, { type: row.type });
+    }
+  },
+  {
+    title: "性质", key: "nature", render(row: SCInfo) {
+      return h(ScNatureTag, { type: row.nature });
+    }
+  },
   { title: "创建时间", key: "createdTime" },
   {
     title: "启用", key: "disabled", render(row: SCInfo) {

@@ -6,7 +6,7 @@ import {
   updateDataToDatabase
 } from "@/api/db.ts";
 import { connectDatabase } from "@/api/connectDatabase.ts";
-import { AnyObject, MyBoolean, MyResponseWithData } from "@/utils/types.ts";
+import { AnyObject, BasicDataInfo, MyResponseWithData } from "@/utils/types.ts";
 import { isArray } from "@/utils/is.ts";
 import { cloneDeep } from "lodash";
 
@@ -61,13 +61,10 @@ export const deleteProduct = (id: number | string) => {
   return deleteDataToDatabase(tableName, id);
 };
 
-export interface GoodsDetail {
-  id: number;
+export interface GoodsDetail extends BasicDataInfo {
   name: string;
   ename?: string;
   unit: string;
   sku: string;
-  disabled: MyBoolean;
   systemCode: string;
-  createdTime?: number;
 }

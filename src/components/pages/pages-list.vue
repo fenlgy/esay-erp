@@ -3,7 +3,7 @@
     <n-card :bordered="false" size="small">
       <n-space vertical size="large">
         <n-space size="small">
-          <btn-refresh-page />
+          <refresh-page-btn />
           <slot name="buttons"></slot>
         </n-space>
         <n-data-table
