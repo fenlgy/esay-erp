@@ -1,8 +1,8 @@
 <template>
-  <n-checkbox v-model:checked="types.client" @change="onChange">
+  <n-checkbox v-model:checked="types.client" @update:checked="onChange">
     客户
   </n-checkbox>
-  <n-checkbox v-model:checked="types.supplier" @change="onChange">
+  <n-checkbox v-model:checked="types.supplier" @update:checked="onChange">
     供应商
   </n-checkbox>
 </template>
