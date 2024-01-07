@@ -10,8 +10,8 @@
 <script setup lang="ts">
 import { SCType } from "@/api/scrm.ts";
 
-defineProps<{
-  value: SCType | undefined
+const props = defineProps<{
+  value?: SCType
 }>();
 
 const emit = defineEmits(["update:value", "change"]);
@@ -19,6 +19,25 @@ const emit = defineEmits(["update:value", "change"]);
 const types = reactive({
   client: false,
   supplier: false
+});
+
+watch(() => props.value, (newVal) => {
+  switch (newVal) {
+    case 0:
+      types.client = true;
+      types.supplier = true;
+      break;
+    case 1:
+      types.client = true;
+      break;
+    case 2:
+      types.supplier = true;
+      break;
+    default:
+      types.client = false;
+      types.supplier = false;
+      break
+  }
 });
 
 function getType() {
