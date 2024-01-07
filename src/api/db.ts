@@ -8,6 +8,7 @@ import { isEmptyObject } from "@/utils/is.ts";
 import { changeObjectKey, isObjectHaveValue } from "@/utils/common.ts";
 import { errorResponse, successResponse } from "@/api/commont.ts";
 import { MyResponse, MyResponseWithData } from "@/utils/types.ts";
+import { reject } from "lodash";
 
 const TAG = "[sqlite3]";
 let database: Promise<Database>;
@@ -101,19 +102,22 @@ export async function insertDataToDatabase(tableName: string, params: DatabasePa
   const valueSymbol = Array(keys.length).fill("?").join(",");
   const values = Object.values(curParams);
 
-  return new Promise((resolve) => {
+  return new Promise((resolve,reject) => {
     myDb.run(`INSERT INTO ${tableName} (${keyName}) VALUES (${valueSymbol})`, values, function(err) {
-      if (err) {
-        // console.error(err.message);
-
-        resolve({ error: parseErrorRespond(err.message, params), ...errorResponse });
-      } else {
-        resolve(
-          {
-            data: this,
-            ...successResponse
-          }
-        );
+      try {
+        if (err) {
+          // console.error(err.message);
+          resolve({ error: parseErrorRespond(err.message, params), ...errorResponse });
+        } else {
+          resolve(
+            {
+              data: this,
+              ...successResponse
+            }
+          );
+        }
+      }catch (err){
+        reject(err)
       }
     });
   });

@@ -39,6 +39,9 @@ const reload = ():void =>{
     isRouterAlive.value = true
   })
 }
+
+window.$myReload = reload;
+// window.$myMessage = useMessage();
 provide('reload',reload)
 
 </script>

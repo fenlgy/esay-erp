@@ -1,13 +1,13 @@
 <template>
   <n-space vertical>
-    <n-form>
-    <n-data-table
-      size="small"
-      :loading="isLoading"
-      :columns="columns"
-      :data="data"
-      :bordered="false"
-    />
+    <n-form :model="data">
+      <n-data-table
+        size="small"
+        :loading="isLoading"
+        :columns="columns"
+        :data="data"
+        :bordered="false"
+      />
     </n-form>
     <n-button type="primary" @click="handleAdd">
       <template #icon>
@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { TableColumn, TableColumns } from "naive-ui/es/data-table/src/interface";
+import { TableColumns } from "naive-ui/es/data-table/src/interface";
 import { AnyObject } from "@/utils/types.ts";
 import { FileAddTwotone } from "@vicons/antd";
 
@@ -30,15 +30,13 @@ const props = withDefaults(defineProps<{
   data: AnyObject[]
 }>(), {});
 
-const row = props.columns.map((item: TableColumn) => {
-  return {
-    [item.key]: null
-  };
-});
+const row = props.columns.reduce((pre, cur: { key: any }) => {
+  pre[cur.key] = null;
+  return pre;
+}, <AnyObject>{});
 
 const handleAdd = () => {
-  props.data.push({...row})
+  props.data.push({ ...row });
 };
-console.log(row);
 const isLoading = ref(false);
 </script>

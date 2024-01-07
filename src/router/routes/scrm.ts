@@ -10,7 +10,7 @@ export default {
       }
     },
     {
-      path: "edit/:id",
+      path: "edit/:id*",
       name: "scrm-edit",
       component: () => import("@/views/scrm/edit.vue"),
       meta: {
