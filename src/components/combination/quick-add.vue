@@ -17,8 +17,12 @@
     </n-form>
     <template #footer>
       <n-space justify="end">
-        <n-button type="primary" @click="handleSubmit">提交</n-button>
-        <n-button type="primary" secondary @click="handleSubmit">提交并继续新增</n-button>
+        <n-button type="primary" @click="()=>handleSubmit(()=>{
+          reload()
+        })">提交</n-button>
+        <n-button type="primary" secondary @click="()=>handleSubmit(()=>{
+          reload()
+        })">提交并继续</n-button>
         <n-button @click="closeModal">取消</n-button>
       </n-space>
     </template>
@@ -27,7 +31,6 @@
 
 <script setup lang="ts">
 import { ButtonProps } from "naive-ui";
-import { ValidationError } from "sequelize";
 import { AnyObject, MyResponse } from "@/utils/types.ts";
 
 const props = withDefaults(defineProps<{
@@ -58,16 +61,15 @@ const closeModal = ()=>{
 }
 
 
-const handleSubmit = async () => {
-  formRef.value?.validate().then(async (errors: ValidationError) => {
+const handleSubmit = async (next?:()=> void) => {
+  formRef.value?.validate().then(async (errors) => {
     props.beforeSubmit && await props.beforeSubmit();
     if (!errors) {
 
       props.submit(props.data).then((response: MyResponse<any>) => {
         if (!response.error) {
           message.success("提交成功");
-          reload()
-          closeModal();
+          next && next()
           console.log(response.data);
         } else {
           message.error(response.error);

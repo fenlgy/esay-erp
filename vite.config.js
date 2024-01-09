@@ -13,6 +13,7 @@ import ViteFonts from "unplugin-fonts/vite";
 import { notBundle } from "vite-plugin-electron/plugin";
 import pkg from "./package.json";
 import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import VueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig(({ command }) => {
   rmSync("dist-electron", { recursive: true, force: true });
@@ -23,6 +24,7 @@ export default defineConfig(({ command }) => {
 
   return {
     plugins: [
+      VueDevTools(),
       vue({
         script:{
           defineModel:true,

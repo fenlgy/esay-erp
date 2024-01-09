@@ -334,3 +334,9 @@ export const isObjectHaveValue = (obj: { [x: string]: any } | any, emptyStrIsFal
   }
   return true;
 };
+
+
+
+export const numberToFixedLength = (num: number, length: number = 4) => {
+  return num.toString().padStart(length, "0");
+};

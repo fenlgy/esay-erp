@@ -31,7 +31,6 @@
 <script setup lang="ts">
 import { AnyObject, MyResponse } from "@/utils/types.ts";
 import { CloseOutlined } from "@vicons/antd";
-import { ValidationError } from "sequelize";
 import { ButtonProps } from "naive-ui";
 
 const props = withDefaults(defineProps<{
@@ -54,7 +53,7 @@ const formRef = ref();
 const message = useMessage();
 
 const handleSubmit = () => {
-  formRef.value?.validate().then(async (errors: ValidationError) => {
+  formRef.value?.validate().then(async (errors) => {
     console.log(errors);
     // emit('update:data',props.data)
     const res = await <Promise<MyResponse<any>>>props.submit();

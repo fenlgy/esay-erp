@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { AlertTwotone, AppstoreTwotone, BookTwotone } from "@vicons/antd";
+import { AlertTwotone, AppstoreTwotone, BookTwotone, SettingTwotone, ShopTwotone } from "@vicons/antd";
 import { renderIcon,renderRouter } from "@/utils/render.tsx";
 
 const menuOptions = [
@@ -34,7 +34,7 @@ const menuOptions = [
   {
     label: "销售管理",
     key: "sales-management",
-    icon: renderIcon(BookTwotone),
+    icon: renderIcon(ShopTwotone),
     children: [
       {
         label: "销售计划",
@@ -68,7 +68,7 @@ const menuOptions = [
   },
   {
     label: "系统设置",
-    icon: renderIcon(BookTwotone),
+    icon: renderIcon(SettingTwotone),
     key: "system",
     children:[
       {

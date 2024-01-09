@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="theme">
+  <n-config-provider :theme="theme" :theme-overrides="themeOverrides">
     <n-message-provider>
     <n-layout has-sider>
       <n-layout-sider collapse-mode="width"
@@ -28,6 +28,8 @@
 // import {ipcRenderer} from 'electron'
 import Navigate from "@/layout/navigate.vue";
 import Header from "@/layout/header.vue";
+import { GlobalThemeOverrides } from "naive-ui";
+import { generateSerialNumber } from "@/api/generateSerialNumber.ts";
 
 const theme = ref();
 
@@ -43,6 +45,13 @@ const reload = ():void =>{
 window.$myReload = reload;
 // window.$myMessage = useMessage();
 provide('reload',reload)
+generateSerialNumber('purchaseOrder').then(item => console.log(item))
+
+const themeOverrides: GlobalThemeOverrides = {
+  common: {
+    // primaryColor: '#FF0000'
+  },
+}
 
 </script>
 <style>
