@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { AlertTwotone, AppstoreTwotone, BookTwotone, SettingTwotone, ShopTwotone } from "@vicons/antd";
-import { renderIcon,renderRouter } from "@/utils/render.tsx";
+import { renderIcon, renderRouter } from "@/utils/render.tsx";
 
 const menuOptions = [
   {
@@ -56,7 +56,7 @@ const menuOptions = [
         key: "procurement-plan"
       },
       {
-        label: "采购订单",
+        label: renderRouter("/purchase/order/list", "采购订单"),
         key: "purchase-order"
       }
     ]
@@ -64,20 +64,20 @@ const menuOptions = [
   {
     label: "统计分析",
     icon: renderIcon(BookTwotone),
-    key: "inventory",
+    key: "inventory"
   },
   {
     label: "系统设置",
     icon: renderIcon(SettingTwotone),
     key: "system",
-    children:[
+    children: [
       {
-        label:renderRouter("/system/system-config/", "系统配置"),
-        key:'system-config',
+        label: renderRouter("/system/system-config/", "系统配置"),
+        key: "system-config"
       },
       {
-        label:renderRouter("/system/unit-config/", "单位管理"),
-        key:'unit-config',
+        label: renderRouter("/system/unit-config/", "单位管理"),
+        key: "unit-config"
       },
       {
         label: renderRouter("/system/warehouse-config/", "仓库管理"),

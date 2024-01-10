@@ -45,7 +45,6 @@ const reload = ():void =>{
 window.$myReload = reload;
 // window.$myMessage = useMessage();
 provide('reload',reload)
-generateSerialNumber('purchaseOrder').then(item => console.log(item))
 
 const themeOverrides: GlobalThemeOverrides = {
   common: {

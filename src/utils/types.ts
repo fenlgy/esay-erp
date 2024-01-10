@@ -29,7 +29,7 @@ export type MyBoolean = 0 | 1; // 0 false / 1 true
 
 export type BasicDataInfo = {
   id: number
-  createdTime: string
-  updatedTime: string
+  createdTime: number
+  updatedTime: number
   disabled: MyBoolean
 }

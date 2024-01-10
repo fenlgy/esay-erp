@@ -1,5 +1,5 @@
 <template>
-  <n-button @click="()=> show = true" :type="buttonType">新增</n-button>
+  <n-button @click="()=> show = true" :type="buttonType">{{buttonName}}</n-button>
   <n-drawer v-model:show="show" :width="width">
     <n-drawer-content>
       <template #header>
@@ -35,6 +35,7 @@ import { ButtonProps } from "naive-ui";
 
 const props = withDefaults(defineProps<{
   buttonType?: ButtonProps["type"]
+  buttonName?:string
   title: string
   data: AnyObject
   type?: "edit" | "detail"
@@ -43,6 +44,7 @@ const props = withDefaults(defineProps<{
   width?: string | number
 }>(), {
   type: "edit",
+  buttonName:'新增',
   buttonType: "primary",
   width: 400
 });
