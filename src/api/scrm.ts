@@ -1,6 +1,5 @@
 import { connectDatabase } from "@/api/connectDatabase.ts";
 import { AnyObject, BasicDataInfo, MyResponseWithData } from "@/utils/types.ts";
-import { insertDataToDatabase } from "@/api/db.ts";
 
 const tableName = "scrm";
 export const getScrmList = (params: AnyObject): Promise<MyResponseWithData<SCInfo[]>> => {

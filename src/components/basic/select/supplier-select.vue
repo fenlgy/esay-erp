@@ -10,7 +10,7 @@ import { SelectOption } from "naive-ui";
 
 const options = ref<SelectOption[]>([]);
 const setOption = async () => {
-  const response = await getScrmList({type:2});
+  const response = await getScrmList([{type:2},{type:0}]);
   if (response.error) {
     console.error(response.error);
   } else {
