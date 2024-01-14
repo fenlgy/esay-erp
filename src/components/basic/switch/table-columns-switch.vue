@@ -17,7 +17,6 @@
 <script setup lang="ts">
 import { SwitchProps } from "naive-ui";
 import { connectDatabase } from "@/api/connectDatabase.ts";
-import { SQL_WHERE_UNIQ_KEY } from "@/api/db.ts";
 
 const props = defineProps<{
   modelValue?: SwitchProps["value"]
