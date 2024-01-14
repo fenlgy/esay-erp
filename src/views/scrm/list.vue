@@ -9,7 +9,6 @@
 </template>
 <script setup lang="ts">
 
-import { addWarehouse, deleteWarehouse } from "@/api/system.ts";
 import { renderTableLinkButton, renderTableSwitch } from "@/utils/render.tsx";
 import { GoodsDetail } from "@/api/products.ts";
 import TableActionButtons from "@/components/basic/button/table-action-buttons.vue";

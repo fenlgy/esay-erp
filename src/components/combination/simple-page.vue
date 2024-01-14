@@ -1,6 +1,6 @@
 <template>
-  <n-button @click="()=> show = true" :type="buttonType">{{buttonName}}</n-button>
-  <n-drawer v-model:show="show" :width="width">
+  <n-button @click="()=> pageShow = true" :type="buttonType" v-if="widthAddButton">{{ buttonName }}</n-button>
+  <n-drawer v-model:show="pageShow" :width="width">
     <n-drawer-content>
       <template #header>
         <n-space>
@@ -35,7 +35,8 @@ import { ButtonProps } from "naive-ui";
 
 const props = withDefaults(defineProps<{
   buttonType?: ButtonProps["type"]
-  buttonName?:string
+  buttonName?: string
+  widthAddButton?: boolean
   title: string
   data: AnyObject
   type?: "edit" | "detail"
@@ -44,12 +45,15 @@ const props = withDefaults(defineProps<{
   width?: string | number
 }>(), {
   type: "edit",
-  buttonName:'新增',
+  buttonName: "新增",
   buttonType: "primary",
-  width: 400
+  width: 400,
+  widthAddButton: false
 });
 
-const show = ref(false);
+const pageShow = defineModel("show", {
+  default: false
+});
 // const show = defineModel<boolean>("show", { default: false });
 const formRef = ref();
 const message = useMessage();
@@ -74,6 +78,6 @@ const handleSave = () => {
 };
 
 const handleClose = () => {
-  show.value = false;
+  pageShow.value = false;
 };
 </script>

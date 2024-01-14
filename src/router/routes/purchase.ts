@@ -3,8 +3,8 @@ export default {
   children: [
     {
       path: "detail/:id*",
-      name: "goods-detail",
-      component: () => import("@/views/goods/edit.vue"),
+      name: "purchase-detail",
+      component: () => import("@/views/purchase/orders/edit.vue"),
       meta: {
         title: "商品管理详情"
       }

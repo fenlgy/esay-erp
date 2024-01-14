@@ -29,7 +29,6 @@
 import Navigate from "@/layout/navigate.vue";
 import Header from "@/layout/header.vue";
 import { GlobalThemeOverrides } from "naive-ui";
-import { generateSerialNumber } from "@/api/generateSerialNumber.ts";
 
 const theme = ref();
 

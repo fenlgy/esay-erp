@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { numberToFixedLength } from "@/utils/common.ts";
 
 const tableName = "serial_numbers";
-export const generateSerialNumber = async (module: string, length: number = 4) => {
+export const generateSerialNumber = async (module: 'purchaseOrder'|'salesOrder', length: number = 4) => {
   const db = await getSqlite3();
 
   function getCurrentDate() {

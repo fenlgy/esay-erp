@@ -1,5 +1,5 @@
 <template>
-  <simple-page title="新增客商" :data="pageData" :submit="handleSubmit" width="500">
+  <simple-page title="新增客商" :data="pageData" :submit="handleSubmit" width="500" :width-add-button="true">
     <n-card :bordered="false">
       <n-row>
         <n-col :span="12">

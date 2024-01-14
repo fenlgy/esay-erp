@@ -340,3 +340,111 @@ export const isObjectHaveValue = (obj: { [x: string]: any } | any, emptyStrIsFal
 export const numberToFixedLength = (num: number, length: number = 4) => {
   return num.toString().padStart(length, "0");
 };
+
+/**
+ * @author FEN
+ * @description 从数组中获取指定字段及值的第一个元素的索引
+ * @param arr
+ * @param matcher
+ * */
+export const getFirstIndexFromArr = (arr:{[K:string]:any}[],matcher:MatchTypeMatcher)=>{
+  let firstIndex = 0
+  for(let i = 0; i<arr.length; i++){
+    let isMatch = false
+    isMatch = matchType(arr[i],matcher) as boolean
+
+    if(isMatch){
+      firstIndex = i
+      break
+    }
+  }
+  return firstIndex
+}
+
+/**
+ * @author FEN
+ * @description 多个 form 表单的验证
+ * @param forms c-form 或则 a-form 的 ref 实例
+ * @return 每个表单验证不通过的
+ * */
+export const multiFormValidate = async (forms: any[]) => {
+  const res = await Promise.all(forms.map((form) => form.validate()));
+  return res.filter((item) => item !== undefined);
+};
+
+/**
+ * @author FEN
+ * @description 去掉数组里的某几个元素以及格式化数组内容后返回新的数组
+ * @return 新的数组
+ * @param arr
+ * @param ignore 过滤条件，函数或对象两种格式
+ * @param formatter 格式化内容函数，第一个参数为当前的数组元素
+ * */
+export const arrReduce = (arr:any[],ignore:MatchTypeMatcher,formatter?:(item:any)=>any)=>{
+  return arr.reduce((acc,item)=>{
+    if(!matchType(item,ignore)){
+      if(formatter){
+        acc.push(formatter(item))
+      }else {
+        acc.push(item)
+      }
+    }
+    return acc
+  },[])
+}
+
+
+/**
+ * @author FEN
+ * @description 从目标数组中删除第一个匹配的元素
+ * @param target 目标数组
+ * @param matcher 匹配器函数，用于确定要删除的元素
+ */
+export const arrRemove = (target: object[], matcher: MatchTypeMatcher) => {
+  // 获取第一个匹配元素的索引
+  const index = getFirstIndexFromArr(target, matcher);
+
+  // 如果找到匹配元素，则从目标数组中删除该元素
+  if (index >= 0) {
+    target.splice(index, 1);
+  }
+}
+
+/**
+ * @author FEN
+ * @description 更新数组
+ * @param target 目标数组
+ * @param type 更新类型：'add' - 添加元素，'remove' - 删除元素，'upgrade' - 更新元素
+ * @param matcher 匹配器，用于确定要删除或更新的元素,当 type 为 add 时，该参数为需要新增的值
+ * @param value 新元素的值（仅在 type 'upgrade' 时使用）
+ * @returns 更新成功返回 true，否则返回 false
+ */
+export const updateArray = (target: any[], type: 'add' | 'remove' | 'upgrade', matcher: MatchTypeMatcher | any, value?: any) => {
+  // 检查目标是否为数组类型
+  if (!Array.isArray(target)) {
+    console.error(`updateArray 中的 target 不是 array 类型！`);
+    return false;
+  }
+
+  switch (type) {
+    case 'add':
+      // 在数组开头添加新元素
+      target.unshift(matcher);
+      break;
+    case 'remove':
+      // 删除匹配的元素
+      arrRemove(target, matcher);
+      break;
+    case 'upgrade':
+      // 获取第一个匹配元素的索引
+      const index = getFirstIndexFromArr(target, matcher);
+      // 更新匹配元素的值
+      target[index] = value;
+      break;
+    default:
+      break;
+  }
+
+  // 更新成功
+  return true;
+};
