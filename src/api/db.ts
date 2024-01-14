@@ -3,12 +3,10 @@ import sqlite3, {
   verbose
 } from "sqlite3";
 import { ipcRenderer } from "electron";
-import { getSqlFromParams } from "@/utils/sql.ts";
+import { getInsertSql, getSelectSql, getUpdateSql } from "@/utils/sql.ts";
 import { isEmptyObject } from "@/utils/is.ts";
-import { changeObjectKey, isObjectHaveValue } from "@/utils/common.ts";
 import { errorResponse, successResponse } from "@/api/commont.ts";
 import { MyResponse, MyResponseWithData } from "@/utils/types.ts";
-import { reject } from "lodash";
 
 const TAG = "[sqlite3]";
 let database: Promise<Database>;
@@ -16,8 +14,8 @@ let myDb: sqlite3.Database;
 
 
 export type SqlParams = Record<string, string | number>
-export type SqlOptions ={
-  order?:string
+export type SqlOptions = {
+  order?: string
 }
 
 export async function getSqlite3(filename?: string) {
@@ -38,22 +36,13 @@ export async function getSqlite3(filename?: string) {
   });
 }
 
+
 export async function getDataFromDatabase(tableName: string, params?: SqlParams, order?: string | boolean): Promise<MyResponseWithData<any>> {
   await getSqlite3();
-  let query: string;
-  if (isObjectHaveValue(params)) {
-    query = `SELECT * FROM ${tableName} WHERE ${getSqlFromParams(<SqlParams>params)}`;
-  } else {
-    // query = `SELECT * FROM ${tableName} ORDER BY created_time DESC`;
-    query = `SELECT * FROM ${tableName}`;
-  }
-
-  if (order) {
-    query += ` ORDER BY ${order}`;
-  }
+  let sql = getSelectSql(tableName, params, order);
   return new Promise((resolve, reject) => {
     myDb.serialize(() => {
-      myDb.all(query, (err, row) => {
+      myDb.all(sql, (err, row) => {
         try {
           if (err) {
             console.error(err);
@@ -91,19 +80,36 @@ function parseErrorRespond(message: string, params: DatabaseParams): string {
   return message;
 }
 
+
+// export const transaction = async (sql, params) => {
+//   await getSqlite3();
+//   return new Promise((resolve, reject) => {
+//     myDb.serialize(() => {
+//       myDb.run("BEGIN TRANSACTION");
+//
+//       // 执行插入操作
+//       const stmt = myDb.prepare(sql);
+//       params.forEach(params => stmt.run(params));
+//       stmt.finalize(err => {
+//         if (err) {
+//           resolve(err);
+//         }
+//       });
+//
+//       // 提交事务
+//       myDb.run("COMMIT");
+//     });
+//   });
+// };
+
 export async function insertDataToDatabase(tableName: string, params: DatabaseParams): Promise<MyResponse<any>> {
   if (isEmptyObject(params)) return { error: "参数不可为空", ...errorResponse };
-
   await getSqlite3();
-  // params.createTime = dayjs().valueOf();
-  const curParams = changeObjectKey(params, "snake");
-  const keys = Object.keys(curParams);
-  const keyName = keys.join(",");
-  const valueSymbol = Array(keys.length).fill("?").join(",");
-  const values = Object.values(curParams);
 
-  return new Promise((resolve,reject) => {
-    myDb.run(`INSERT INTO ${tableName} (${keyName}) VALUES (${valueSymbol})`, values, function(err) {
+  const { sql, values } = getInsertSql(tableName, params);
+
+  return new Promise((resolve, reject) => {
+    myDb.run(sql, values[0], function(err) {
       try {
         if (err) {
           // console.error(err.message);
@@ -116,8 +122,8 @@ export async function insertDataToDatabase(tableName: string, params: DatabasePa
             }
           );
         }
-      }catch (err){
-        reject(err)
+      } catch (err) {
+        reject(err);
       }
     });
   });
@@ -125,29 +131,31 @@ export async function insertDataToDatabase(tableName: string, params: DatabasePa
 
 export const SQL_WHERE_UNIQ_KEY = "sql_where_uniq_key";
 
-export async function updateDataToDatabase(tableName: string, params: DatabaseParamsForUpdate): Promise<MyResponse<any>> {
+export async function updateDataToDatabase(tableName: string, params:DatabaseParams, whereKeys: string | string[] = "id"): Promise<MyResponse<any>> {
   if (isEmptyObject(params)) return { error: "参数不可为空", ...errorResponse };
   await getSqlite3();
   // 需要更新的字段
-  const conditions: string[] = [];
-  // where 后面的匹配条件
-  let whereCondition: string[] = [];
-  const _params: DatabaseParams = {};
-  for (const key in params) {
-    if (key === SQL_WHERE_UNIQ_KEY) {
-      Object.keys(params[key]).forEach((curKey: string) => {
-        _params[`$${curKey}`] = params[key][curKey];
-        whereCondition.push(`${curKey} = $${curKey}`);
-      });
-      // @ts-ignore
-      delete params[SQL_WHERE_UNIQ_KEY];
-    } else {
-      conditions.push(`${key} = $${key}`);
-      _params[`$${key}`] = params[key];
-    }
-  }
+  // const conditions: string[] = [];
+  // // where 后面的匹配条件
+  // let whereCondition: string[] = [];
+  // const _params: DatabaseParams = {};
+  // for (const key in params) {
+  //   if (key === SQL_WHERE_UNIQ_KEY) {
+  //     Object.keys(params[key]).forEach((curKey: string) => {
+  //       _params[`$${curKey}`] = params[key][curKey];
+  //       whereCondition.push(`${curKey} = $${curKey}`);
+  //     });
+  //     // @ts-ignore
+  //     delete params[SQL_WHERE_UNIQ_KEY];
+  //   } else {
+  //     conditions.push(`${key} = $${key}`);
+  //     _params[`$${key}`] = params[key];
+  //   }
+  // }
+  const { sql, values } = getUpdateSql(tableName, params, whereKeys);
   return new Promise((resolve, reject) => {
-    myDb.run(`UPDATE ${tableName} SET ${conditions.join(",")} WHERE ${whereCondition.join(" AND ")}`, _params, (err) => {
+    // myDb.run(`UPDATE ${tableName} SET ${conditions.join(",")} WHERE ${whereCondition.join(" AND ")}`, _params, (err) => {
+    myDb.run(sql, values, (err) => {
       try {
         if (err) {
           resolve({

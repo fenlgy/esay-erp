@@ -16,7 +16,7 @@ export const setSystemConfig = (params: AnyObject) => {
 };
 
 export const getSystemConfig = async (): Promise<SystemConfig> => {
-  const { data } = <MyResponseWithData<KVObject[]>>await connectDatabase("get", tableName,{},false);
+  const { data } = <MyResponseWithData<KVObject[]>>await connectDatabase("get", tableName,{},{order:false});
   return data.reduce((pre, cur) => {
     return {
       ...pre,

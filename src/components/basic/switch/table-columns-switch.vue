@@ -25,22 +25,17 @@ const props = defineProps<{
   id: number
 }>();
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
-const message = useMessage()
+const message = useMessage();
 const handleChange = async (v) => {
-  const res = await connectDatabase("update", props.databaseTableName, {
-    [SQL_WHERE_UNIQ_KEY]: {
-      id:props.id
-    },
-    disabled: v
-  });
+  const res = await connectDatabase("update", props.databaseTableName, { disabled: v, id: props.id });
 
-  if (res.error){
-    message.success(res.error)
-  }else {
-    emit('update:modelValue',v)
-    message.success('小主，更新成功啦！')
+  if (res.error) {
+    message.success(res.error);
+  } else {
+    emit("update:modelValue", v);
+    message.success("小主，更新成功啦！");
   }
 };
 </script>
