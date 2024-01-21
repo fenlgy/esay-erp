@@ -159,6 +159,8 @@ export interface PurchaseOrderMainInfo extends BasicDataInfo {
   orderDate: number;
   goodsReadyDate: number;
   contract: string;
+  currency: string;
+  price: number;
   purchaseIdList: string;
 }
 

@@ -1,29 +1,37 @@
 export default {
-  path: "/system",
+  path: '/system',
   children: [
     {
-      path: "system-config",
-      name: "system-config",
-      component: () => import("@/views/system/system-config/index.vue"),
+      path: 'system-config',
+      name: 'system-config',
+      component: () => import('@/views/system/system-config/index.vue'),
       meta: {
-        title: "系统配置"
-      }
+        title: '系统配置',
+      },
     },
     {
-      path: "warehouse-config",
-      name: "warehouse-config",
-      component: () => import("@/views/system/warehouse/list.vue"),
+      path: 'warehouse-config',
+      name: 'warehouse-config',
+      component: () => import('@/views/system/warehouse/list.vue'),
       meta: {
-        title: "仓库配置"
-      }
+        title: '仓库配置',
+      },
     },
     {
-      path: "unit-config",
-      name: "unit-config",
-      component: () => import("@/views/system/unit/list.vue"),
+      path: 'unit-config',
+      name: 'unit-config',
+      component: () => import('@/views/system/unit/list.vue'),
       meta: {
-        title: "单位管理"
-      }
+        title: '单位管理',
+      },
     },
-  ]
+    {
+      path: 'currency-config',
+      name: 'currency-config',
+      component: () => import('@/views/system/currency/list.vue'),
+      meta: {
+        title: '单位管理',
+      },
+    },
+  ],
 };

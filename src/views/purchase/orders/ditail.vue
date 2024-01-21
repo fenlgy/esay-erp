@@ -34,8 +34,13 @@
           <!--      </form-item>-->
         </n-grid>
       </n-card>
-      <n-card title="采购清单">
-        <goods-list v-model:data="pageData.purchaseList" />
+      <n-card>
+        <n-space vertical size="large">
+          <n-page-header title="采购清单">
+            <template #subtitle>币别：<currency-select v-model="currency" size="small" /></template>
+          </n-page-header>
+          <goods-list v-model:data="pageData.purchaseList" :currency="currency" />
+        </n-space>
       </n-card>
     </n-space>
   </simple-page>
@@ -52,6 +57,8 @@
   const show = defineModel('show', {
     default: false,
   });
+
+  const currency = ref();
 
   const pageData = ref(<PurchaseOrder>{ purchaseList: [{}] });
   const handleSubmit = async () => {

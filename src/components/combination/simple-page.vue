@@ -76,7 +76,6 @@
         if (res.error) {
           message.error(res.error);
         } else {
-          message.success('新增成功！');
           $myReload();
           handleClose();
         }

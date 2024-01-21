@@ -4,8 +4,8 @@
       <n-button @click="handleAddOrder" type="primary">新增</n-button>
     </template>
   </pages-list>
-  <edit v-model:show="showEdit" />
-  <detail v-model:show="showDetail" :id="orderId" />
+  <edit v-model:show="showEdit" v-if="mountedEdit" />
+  <detail v-model:show="showDetail" :id="orderId" v-if="mountedDetail" />
 </template>
 
 <script setup lang="ts">
@@ -18,14 +18,21 @@
   const orderId = ref<number>();
   const showEdit = ref();
   const showDetail = ref();
+  const mountedDetail = ref(false);
+  const mountedEdit = ref(false);
 
   const handleAddOrder = () => {
-    orderId.value = undefined;
-    showEdit.value = true;
+    mountedEdit.value = true;
+    nextTick(() => {
+      showEdit.value = true;
+    });
   };
   const handleEditOrder = (id: number) => {
-    showDetail.value = true;
     orderId.value = id;
+    mountedDetail.value = true;
+    nextTick(() => {
+      showDetail.value = true;
+    });
   };
   const columns = [
     {
@@ -44,6 +51,13 @@
       },
     },
     { title: '供应商', key: 'supplier' },
+    {
+      title: '总金额',
+      key: 'price',
+      render(row) {
+        return `${row.currency ?? ''} ${row.price ?? ''}`;
+      },
+    },
     {
       title: '订单日期',
       key: 'orderDate',

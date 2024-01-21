@@ -23,8 +23,13 @@
           <!--      </form-item>-->
         </n-grid>
       </n-card>
-      <n-card title="采购清单">
-        <goods-list v-model:data="pageData.purchaseList" />
+      <n-card>
+        <n-space vertical size="large">
+          <n-page-header title="采购清单">
+            <template #subtitle>币别：<currency-select v-model="pageData.currency" size="small" /></template>
+          </n-page-header>
+          <goods-list v-model:data="pageData.purchaseList" :currency="pageData.currency" />
+        </n-space>
       </n-card>
     </n-space>
   </simple-page>
@@ -34,6 +39,7 @@
   import SupplierSelect from '@/components/basic/select/supplier-select.vue';
   import { addPurchaseOrder, PurchaseOrder } from '@/api/purchase.ts';
   import GoodsList from '@/views/purchase/orders/component/goods-list.vue';
+  import { getSumFromArr } from '@/utils/common.ts';
 
   const show = defineModel('show', {
     default: false,
@@ -41,6 +47,9 @@
 
   const pageData = ref(<PurchaseOrder>{ purchaseList: [{}] });
   const handleSubmit = async () => {
+    debugger;
+    const total = getSumFromArr(pageData.value.purchaseList, ['quantity', 'subtotalPrice']);
+    pageData.value.price = total.subtotalPrice;
     return addPurchaseOrder(pageData.value);
   };
 </script>

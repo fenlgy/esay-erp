@@ -1,19 +1,21 @@
 import {
-  DatabaseParams, deleteDataToDatabase,
-  getDataFromDatabase, insertDataToDatabase,
+  DatabaseParams,
+  deleteDataToDatabase,
+  getDataFromDatabase,
+  insertDataToDatabase,
   SqlParams,
-  updateDataToDatabase
-} from "@/api/db.ts";
-import { connectDatabase } from "@/api/connectDatabase.ts";
-import { AnyObject, BasicDataInfo, MyResponseWithData } from "@/utils/types.ts";
+  updateDataToDatabase,
+} from '@/api/db.ts';
+import { connectDatabase } from '@/api/connectDatabase.ts';
+import { AnyObject, BasicDataInfo, MyResponseWithData } from '@/utils/types.ts';
 
-const tableName = "products";
+const tableName = 'products';
 export const getProducts = (params?: SqlParams) => {
-  return connectDatabase("get", tableName, params);
+  return connectDatabase('get', tableName, params);
 };
 
 export const getProductsDetail = async (id: number): Promise<MyResponseWithData<GoodsDetail>> => {
-  return getDataFromDatabase(tableName, { id: id });
+  return connectDatabase('get', tableName, { id: id });
 };
 
 export const updateProducts = async (params: AnyObject) => {
@@ -30,16 +32,15 @@ export const updateProducts = async (params: AnyObject) => {
   //   console.error(respondMessage);
   //   return false;
   // }
-  return await updateDataToDatabase(tableName, params, "id");
+  return await updateDataToDatabase(tableName, params, 'id');
 };
 
-
 export const addProduct = (params: DatabaseParams) => {
-  return insertDataToDatabase(tableName, params);
+  return connectDatabase('add', tableName, params);
 };
 
 export const deleteProduct = (id: number | string) => {
-  return deleteDataToDatabase(tableName, id);
+  return connectDatabase('delete', tableName, id);
 };
 
 export interface GoodsDetail extends BasicDataInfo {

@@ -1,7 +1,5 @@
 <template>
-  <n-form :model="data">
-    <n-data-table :data="data" :columns="columns" :loading="isLoading" size="small" :summary="summary" />
-  </n-form>
+  <n-data-table :data="data" :columns="columns" :loading="isLoading" size="small" :summary="summary" />
 </template>
 
 <script setup lang="ts">
@@ -11,12 +9,30 @@
   import FormItem from '@/components/basic/form/form-item.vue';
   import SkuSelect from '@/components/basic/select/sku-select.vue';
   import InputNumberFormItem from '@/components/basic/form/input-number-form-item.vue';
-  import { DataTableCreateSummary } from 'naive-ui';
+  import { DataTableCreateSummary, NText } from 'naive-ui';
   import { RowData } from 'naive-ui/es/data-table/src/interface';
+  import { getCurrency } from '@/api/metadata.ts';
 
+  const props = defineProps<{
+    currency?: string;
+  }>();
   const data = defineModel<AnyObject[]>('data', {
     default: [{}],
   });
+
+  const currencySymbol = ref();
+  watch(
+    () => props.currency,
+    (v: string) => {
+      getCurrency(v).then((res) => (currencySymbol.value = res.symbol));
+    }
+  );
+
+  const computeNumber = (row) => {
+    row.subtotalPrice = row.quantity * row.unitPrice || '';
+    row.taxAmount = row.subtotalPrice * row.taxRate * 0.01;
+    row.amountExcludingTax = row.subtotalPrice - row.taxAmount;
+  };
 
   const isLoading = ref(false);
   const columns = [
@@ -28,7 +44,7 @@
         return h(
           FormItem,
           {
-            path: `${index}.sku`,
+            path: `purchaseList.${index}.sku`,
             required: true,
           },
           {
@@ -57,7 +73,7 @@
         return h(
           InputNumberFormItem,
           {
-            'path': `${index}.quantity`,
+            'path': `purchaseList.${index}.quantity`,
             'required': true,
             'value': row.quantity,
             'onUpdate:value': (v) => (row.quantity = v),
@@ -74,12 +90,12 @@
         return h(
           InputNumberFormItem,
           {
-            'path': `${index}.unitPrice`,
+            'path': `purchaseList.${index}.unitPrice`,
             'required': true,
             'value': row.unitPrice,
             'onUpdate:value': (v) => (row.unitPrice = v),
           },
-          { prefix: () => '¥' }
+          { prefix: () => currencySymbol.value }
         );
       },
     },
@@ -88,7 +104,8 @@
       key: 'subtotalPrice',
       width: 90,
       render(row): VNode<RendererNode, RendererElement, { [p: string]: any }> {
-        row.subtotalPrice = row.quantity * row.unitPrice || '';
+        // row.subtotalPrice = row.quantity * row.unitPrice || '';
+        computeNumber(row);
         return row.subtotalPrice;
       },
     },
@@ -100,13 +117,14 @@
         return h(
           InputNumberFormItem,
           {
-            'path': `${index}.taxRate`,
+            'path': `purchaseList.${index}.taxRate`,
             'required': true,
             'value': row.taxRate,
             'onUpdate:value': (v) => {
               row.taxRate = v;
-              row.taxAmount = row.subtotalPrice * v * 0.01;
-              row.amountExcludingTax = row.subtotalPrice - row.taxAmount;
+              computeNumber(row);
+              // row.taxAmount = row.subtotalPrice * row.taxRate * 0.01;
+              // row.amountExcludingTax = row.subtotalPrice - row.taxAmount;
             },
           },
           { suffix: () => '%' }
@@ -147,7 +165,14 @@
     return {
       name: { colSpan: 1, value: '总计' },
       sku: { colSpan: 1 },
-      quantity: { colSpan: 1, value: (pageData as RowData[]).reduce((prevValue, row) => prevValue + row.quantity, 0) },
+      quantity: {
+        colSpan: 1,
+        value: h(
+          'span',
+          {},
+          (pageData as RowData[]).reduce((prevValue, row) => prevValue + row.quantity, 0)
+        ),
+      },
       unitPrice: { colSpan: 1 },
       subtotalPrice: {
         value: h(
@@ -175,10 +200,6 @@
       },
     };
   };
-  watch(
-    () => data,
-    (v) => console.log(v)
-  );
 </script>
 
 <style scoped></style>

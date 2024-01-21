@@ -55,11 +55,9 @@
     add: FileAddTwotone,
   };
 
-  const message = useMessage();
   const reload = inject('reload') as Function;
   const handleDelete = async () => {
     buttons.delete.onDelete && (await buttons.delete.onDelete());
-    message.success('已被残忍删除！');
     buttons.delete.popConfirm?.reload !== false && reload();
   };
 

@@ -14,37 +14,46 @@
 </template>
 
 <script setup lang="ts">
+  import { addWarehouse, deleteWarehouse, getWarehouse } from '@/api/system.ts';
+  import { renderTableSwitch } from '@/utils/render.tsx';
+  import { GoodsDetail } from '@/api/products.ts';
+  import TableActionButtons from '@/components/basic/button/table-action-buttons.vue';
+  import { formatDate } from '@/utils/formatter.ts';
 
-import { addWarehouse, deleteWarehouse, getWarehouse } from "@/api/system.ts";
-import { renderTableSwitch } from "@/utils/render.tsx";
-import { GoodsDetail } from "@/api/products.ts";
-import TableActionButtons from "@/components/basic/button/table-action-buttons.vue";
+  const data = ref({});
 
-const data = ref({});
+  const columns = [
+    { title: '仓库', key: 'name' },
+    { title: '英文名', key: 'ename' },
+    {
+      title: '创建时间',
+      key: 'createdTime',
+      render(row: { createdTime: number }) {
+        return formatDate(row.createdTime);
+      },
+    },
+    {
+      title: '启用',
+      key: 'disabled',
+      render(row: { id: number; disabled: number }) {
+        return h(renderTableSwitch(row, 'warehouse'));
+      },
+    },
+    {
+      title: '操作',
+      width: 100,
+      render(row: GoodsDetail) {
+        return h(TableActionButtons, {
+          buttons: [
+            { type: 'edit', to: `/goods/detail/${row.id}` },
+            { type: 'delete', onDelete: () => handleDelete(row.id) },
+          ],
+        });
+      },
+    },
+  ];
 
-const columns = [
-  { title: "仓库", key: "name" },
-  { title: "英文名", key: "ename" },
-  { title: "创建时间", key: "createdTime" },
-  {
-    title: "启用", key: "disabled", render(row: { id: number, disabled: number }) {
-      return h(renderTableSwitch(row, "warehouse"));
-    }
-  },
-  {
-    title: "操作", width: 100, render(row: GoodsDetail) {
-      return h(TableActionButtons, {
-        buttons: [
-          { type: "edit", to: `/goods/detail/${row.id}` },
-          { type: "delete", onDelete: () => handleDelete(row.id) }
-        ]
-      });
-    }
-  }
-];
-
-const handleDelete = (id: number) => {
-  return deleteWarehouse(id);
-};
-
+  const handleDelete = (id: number) => {
+    return deleteWarehouse(id);
+  };
 </script>
