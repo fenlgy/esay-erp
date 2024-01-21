@@ -1,8 +1,8 @@
-import { isArray, isObject } from "@/utils/is.ts";
-import { changeObjectKey, isObjectHaveValue } from "@/utils/common.ts";
-import { DatabaseParams, SqlParams } from "@/api/db.ts";
-import { AnyObject } from "@/utils/types.ts";
-import { cloneDeep } from "lodash";
+import { isArray, isObject } from '@/utils/is.ts';
+import { changeObjectKey, isObjectHaveValue } from '@/utils/common.ts';
+import { DatabaseParams, SqlParams } from '@/api/db.ts';
+import { AnyObject } from '@/utils/types.ts';
+import { cloneDeep } from 'lodash';
 
 /**
  * 获取参数中的键值对
@@ -27,16 +27,16 @@ function getKeyCell(params: Record<string, string | number>) {
 export const getSelectSqlFromParams = (params: Record<string, string | number> | Record<string, string | number>[]) => {
   // {key1:1,key2:2} => key1 = 1 AND key2 = 2
   if (isObject(params)) {
-    return getKeyCell(params).join(" AND ");
+    return getKeyCell(params).join(' AND ');
   }
   // [{key:1},{key:2}] => key = 1 OR key =2
   if (isArray(params)) {
-    let res = "";
+    let res = '';
     params.forEach((item, index) => {
       if (index === 0) {
-        res += getKeyCell(item).join(" AND ");
+        res += getKeyCell(item).join(' AND ');
       } else {
-        res += " OR " + getKeyCell(item).join(" OR ");
+        res += ' OR ' + getKeyCell(item).join(' OR ');
       }
     });
     return res;
@@ -50,7 +50,7 @@ export const getSelectSqlFromParams = (params: Record<string, string | number> |
  * @param order - 排序方式，默认为 "created_time DESC"
  * @returns 生成的 SELECT SQL 语句
  */
-export const getSelectSql = (table: string, params?: SqlParams, order: string | boolean = "created_time DESC") => {
+export const getSelectSql = (table: string, params?: SqlParams, order: string | boolean = 'created_time DESC') => {
   let sql: string;
   if (isObjectHaveValue(params)) {
     sql = `SELECT * FROM ${table} WHERE ${getSelectSqlFromParams(<SqlParams>params)}`;
@@ -72,18 +72,18 @@ export const getSelectSql = (table: string, params?: SqlParams, order: string | 
  */
 export const getInsertSql = (table: string, params: any, callBack?: (item: Record<string, any>) => void) => {
   const curParams = Array.isArray(params) ? params : [params];
-  curParams.forEach(item => {
+  curParams.forEach((item) => {
     callBack && callBack(item);
   });
-  const newParams = curParams.map(item => changeObjectKey(item, "snake"));
+  const newParams = curParams.map((item) => changeObjectKey(item, 'snake'));
   const keys = Object.keys(newParams[0]);
-  const keyName = keys.join(",");
-  const valueSymbol = Array(keys.length).fill("?").join(",");
-  const values = newParams.map(item => Object.values(item));
+  const keyName = keys.join(',');
+  const valueSymbol = Array(keys.length).fill('?').join(',');
+  const values = newParams.map((item) => Object.values(item));
   let sql = `INSERT INTO ${table} (${keyName}) VALUES (${valueSymbol})`;
   return {
     sql,
-    values
+    values,
   };
 };
 
@@ -107,9 +107,23 @@ export const getUpdateSql = (table: string, params: AnyObject, whereKeys: string
   }
 
   return {
-    sql: `UPDATE ${table} SET ${conditions.join(",")} WHERE ${whereCondition.join(" AND ")}`,
-    values: _params
+    sql: `UPDATE ${table} SET ${conditions.join(',')} WHERE ${whereCondition.join(' AND ')}`,
+    values: _params,
   };
+};
 
-
+export const getDeleteSql = (table: string, params: number | string | Record<string, number | string>) => {
+  const curParams = isObject(params) ? params : { id: params };
+  let whereCondition: string;
+  const values = <(number | string)[]>[];
+  whereCondition = Object.keys(curParams)
+    .map((key) => {
+      values.push(curParams[key]);
+      return `${key} = ?`;
+    })
+    .join(' AND ');
+  return {
+    sql: `DELETE FROM ${table} WHERE ${whereCondition}`,
+    values: values,
+  };
 };

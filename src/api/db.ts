@@ -1,43 +1,42 @@
-import sqlite3, {
-  type Database,
-  verbose
-} from "sqlite3";
-import { ipcRenderer } from "electron";
-import { getInsertSql, getSelectSql, getUpdateSql } from "@/utils/sql.ts";
-import { isEmptyObject } from "@/utils/is.ts";
-import { errorResponse, successResponse } from "@/api/commont.ts";
-import { MyResponse, MyResponseWithData } from "@/utils/types.ts";
+import sqlite3, { type Database, verbose } from 'sqlite3';
+import { ipcRenderer } from 'electron';
+import { getDeleteSql, getInsertSql, getSelectSql, getUpdateSql } from '@/utils/sql.ts';
+import { isEmptyObject } from '@/utils/is.ts';
+import { errorResponse, successResponse } from '@/api/commont.ts';
+import { MyResponse, MyResponseWithData } from '@/utils/types.ts';
 
-const TAG = "[sqlite3]";
+const TAG = '[sqlite3]';
 let database: Promise<Database>;
 let myDb: sqlite3.Database;
 
-
-export type SqlParams = Record<string, string | number>
+export type SqlParams = Record<string, string | number>;
 export type SqlOptions = {
-  order?: string
-}
+  order?: string;
+};
 
 export async function getSqlite3(filename?: string) {
-  const dbPath: string = await ipcRenderer.invoke("get-database-path");
-  return database ??= new Promise<Database>((resolve, reject) => {
-    const db = new (verbose().Database)(dbPath, error => {
+  const dbPath: string = await ipcRenderer.invoke('get-database-path');
+  return (database ??= new Promise<Database>((resolve, reject) => {
+    const db = new (verbose().Database)(dbPath, (error) => {
       if (error) {
-        console.log(TAG, "initialize failed :(");
+        console.log(TAG, 'initialize failed :(');
         console.log(TAG, error);
         reject(error);
       } else {
-        console.log(TAG, "initialize success :)");
+        console.log(TAG, 'initialize success :)');
         console.log(TAG, filename);
         resolve(db);
         myDb = db;
       }
     });
-  });
+  }));
 }
 
-
-export async function getDataFromDatabase(tableName: string, params?: SqlParams, order?: string | boolean): Promise<MyResponseWithData<any>> {
+export async function getDataFromDatabase(
+  tableName: string,
+  params?: SqlParams,
+  order?: string | boolean
+): Promise<MyResponseWithData<any>> {
   await getSqlite3();
   let sql = getSelectSql(tableName, params, order);
   return new Promise((resolve, reject) => {
@@ -47,14 +46,14 @@ export async function getDataFromDatabase(tableName: string, params?: SqlParams,
           if (err) {
             console.error(err);
             resolve({
-              data: "",
+              data: '',
               error: err.message,
-              ...errorResponse
+              ...errorResponse,
             });
           } else {
             resolve({
               data: row,
-              ...successResponse
+              ...successResponse,
             });
           }
         } catch (err) {
@@ -66,20 +65,19 @@ export async function getDataFromDatabase(tableName: string, params?: SqlParams,
 }
 
 export type DatabaseValueType = number | string | null | Blob | undefined;
-export type DatabaseParams = Record<string, DatabaseValueType>
-export type DatabaseParamsForUpdate = { "sql_where_uniq_key": Record<string, any> } & DatabaseParams
+export type DatabaseParams = Record<string, DatabaseValueType>;
+export type DatabaseParamsForUpdate = { sql_where_uniq_key: Record<string, any> } & DatabaseParams;
 
 function parseErrorRespond(message: string, params: DatabaseParams): string {
-  const keys = message.split(".");
+  const keys = message.split('.');
   const key = keys[keys.length - 1];
-  if (message.includes("UNIQUE constraint failed")) {
+  if (message.includes('UNIQUE constraint failed')) {
     message = `字段：${key} ，值：${params[key]} 已存在`;
-  } else if (message.includes("NOT NULL constraint failed")) {
+  } else if (message.includes('NOT NULL constraint failed')) {
     message = `字段：${key} 不能为空`;
   }
   return message;
 }
-
 
 // export const transaction = async (sql, params) => {
 //   await getSqlite3();
@@ -103,24 +101,22 @@ function parseErrorRespond(message: string, params: DatabaseParams): string {
 // };
 
 export async function insertDataToDatabase(tableName: string, params: DatabaseParams): Promise<MyResponse<any>> {
-  if (isEmptyObject(params)) return { error: "参数不可为空", ...errorResponse };
+  if (isEmptyObject(params)) return { error: '参数不可为空', ...errorResponse };
   await getSqlite3();
 
   const { sql, values } = getInsertSql(tableName, params);
 
   return new Promise((resolve, reject) => {
-    myDb.run(sql, values[0], function(err) {
+    myDb.run(sql, values[0], function (err) {
       try {
         if (err) {
           // console.error(err.message);
           resolve({ error: parseErrorRespond(err.message, params), ...errorResponse });
         } else {
-          resolve(
-            {
-              data: this,
-              ...successResponse
-            }
-          );
+          resolve({
+            data: this,
+            ...successResponse,
+          });
         }
       } catch (err) {
         reject(err);
@@ -129,10 +125,14 @@ export async function insertDataToDatabase(tableName: string, params: DatabasePa
   });
 }
 
-export const SQL_WHERE_UNIQ_KEY = "sql_where_uniq_key";
+export const SQL_WHERE_UNIQ_KEY = 'sql_where_uniq_key';
 
-export async function updateDataToDatabase(tableName: string, params:DatabaseParams, whereKeys: string | string[] = "id"): Promise<MyResponse<any>> {
-  if (isEmptyObject(params)) return { error: "参数不可为空", ...errorResponse };
+export async function updateDataToDatabase(
+  tableName: string,
+  params: DatabaseParams,
+  whereKeys: string | string[] = 'id'
+): Promise<MyResponse<any>> {
+  if (isEmptyObject(params)) return { error: '参数不可为空', ...errorResponse };
   await getSqlite3();
   // 需要更新的字段
   // const conditions: string[] = [];
@@ -160,11 +160,11 @@ export async function updateDataToDatabase(tableName: string, params:DatabasePar
         if (err) {
           resolve({
             ...errorResponse,
-            error: parseErrorRespond(err.message, params)
+            error: parseErrorRespond(err.message, params),
           });
         } else {
           resolve({
-            ...successResponse
+            ...successResponse,
           });
         }
       } catch (err) {
@@ -174,10 +174,14 @@ export async function updateDataToDatabase(tableName: string, params:DatabasePar
   });
 }
 
-export async function deleteDataToDatabase(tableName: string, id: number | string): Promise<MyResponse<any>> {
+export async function deleteDataToDatabase(
+  tableName: string,
+  params: string | number | Record<string, number | string>
+): Promise<MyResponse<any>> {
   await getSqlite3();
+  const { sql, values } = getDeleteSql(tableName, params);
   return new Promise((resolve, reject) => {
-    myDb.run(`DELETE FROM ${tableName} WHERE id = ?`, [id], (err) => {
+    myDb.run(sql, values, (err) => {
       try {
         if (err) {
           console.error(err.message);
@@ -188,7 +192,6 @@ export async function deleteDataToDatabase(tableName: string, id: number | strin
       } catch (err) {
         reject(err);
       }
-
     });
   });
 }
