@@ -12,42 +12,46 @@
 </template>
 
 <script setup lang="ts">
+  import { Metadata } from '@/api/metadata.ts';
+  import { getSelectOptions } from '@/utils/common.ts';
+  import { getProducts } from '@/api/products.ts';
 
-import { getUnit, Metadata } from "@/api/metadata.ts";
-import { getSelectOptions } from "@/utils/common.ts";
-import { getProducts } from "@/api/products.ts";
+  const selectRef = ref();
+  const options = ref<Metadata[]>([]);
+  const setOption = async () => {
+    const response = await getProducts();
+    if (response.error) {
+      console.error(response.error);
+    } else {
+      options.value = getSelectOptions(
+        <Metadata[]>response.data,
+        'name',
+        'name',
+        {},
+        {
+          ignore: {
+            disabled: 1,
+          },
+        }
+      );
+    }
+  };
 
-const selectRef = ref()
-const options = ref<Metadata[]>([]);
-const setOption = async () => {
-  const response = await getProducts();
-  if (response.error) {
-    console.error(response.error);
-  } else {
-    options.value = getSelectOptions(<Metadata[]>response.data, "name", "name", {}, {
-      ignore: {
-        disabled: 1
-      }
-    });
-  }
-};
+  setOption();
 
-setOption();
+  const show = ref(false);
 
+  const handleAdd = () => {
+    selectRef.value?.focus();
+    show.value = true;
+  };
 
-const show = ref(false);
+  const hideInput = () => {
+    selectRef.value?.focus();
+    show.value = false;
+  };
 
-const handleAdd = ()=>{
-  selectRef.value?.focus()
-  show.value = true
-}
-
-const hideInput = () => {
-  selectRef.value?.focus()
-  show.value = false
-}
-
-const handleBlur = ()=>{
-  // show.value = false
-}
+  const handleBlur = () => {
+    // show.value = false
+  };
 </script>

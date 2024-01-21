@@ -36,6 +36,7 @@
     "src",
     "auto-imports.d.ts",
     "components.d.ts",
+    "./src/global.d.ts"
   ],
   "exclude": [
     "node_modules"

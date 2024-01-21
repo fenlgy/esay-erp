@@ -3,7 +3,10 @@
     :required="required"
     :path="path"
   >
-    <n-input v-model:value="_value">
+    <n-input-number
+      v-model:value="_value"
+      :show-button="false"
+    >
       <template
         v-for="slot in Object.keys($slots)"
         v-slot:[slot]="scope"
@@ -13,7 +16,7 @@
           v-bind="scope ?? {}"
         />
       </template>
-    </n-input>
+    </n-input-number>
   </form-item>
 </template>
 
