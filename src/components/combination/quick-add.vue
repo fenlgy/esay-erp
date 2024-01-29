@@ -73,17 +73,18 @@
       ?.validate()
       .then(async (errors) => {
         props.beforeSubmit && (await props.beforeSubmit());
-        if (!errors) {
-          props.submit(props.data).then((response: MyResponse<any>) => {
-            if (!response.error) {
-              next && next();
-            }
+        // if (!errors) {
+        //   debugger;
+        props.submit(props.data).then((response: MyResponse<any>) => {
+          if (!response.error) {
+            next && next();
+          }
 
-            props.afterSubmit && props.afterSubmit();
-          });
-        } else {
-          console.log(errors);
-        }
+          props.afterSubmit && props.afterSubmit();
+        });
+        // } else {
+        //   console.log(errors);
+        // }
       })
       .catch((errors: ValidationError) => console.error(errors));
   };

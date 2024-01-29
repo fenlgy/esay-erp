@@ -6,16 +6,17 @@
 </template>
 
 <script setup lang="ts">
-import { TagProps } from "naive-ui";
-import { tagColor } from "@/utils/config.ts";
-import { SCType } from "@/api/scrm.ts";
+  import { TagProps } from 'naive-ui';
+  import { tagColor } from '@/utils/config.ts';
+  import { SCType } from '%/database/model/cs.ts';
 
-withDefaults(defineProps<{
-  size?: TagProps["size"]
-  type: SCType
-}>(), {
-  size: "small"
-});
-
-
+  withDefaults(
+    defineProps<{
+      size?: TagProps['size'];
+      type: SCType;
+    }>(),
+    {
+      size: 'small',
+    }
+  );
 </script>

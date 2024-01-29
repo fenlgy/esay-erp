@@ -11,6 +11,7 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "useDefineForClassFields": true,
+    "forceConsistentCasingInFileNames": true,
     /* Bundler mode */
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -23,20 +24,25 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "baseUrl": ".",
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "%/*": [
+        "electron/*"
       ]
     },
-    "types": [
-    ]
+    "types": ["sequelize"]
   },
   "include": [
     "src",
+    "electron",
     "auto-imports.d.ts",
     "components.d.ts",
-    "./src/global.d.ts"
+    "src/global.d.ts"
   ],
   "exclude": [
     "node_modules"

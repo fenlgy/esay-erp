@@ -12,41 +12,43 @@
 </template>
 
 <script setup lang="ts">
+  import { getUnit } from '@/api/metadata.ts';
+  import { getSelectOptions } from '@/utils/common.ts';
+  import { Metadata } from '%/database/model/metadata.ts';
 
-import { getUnit, Metadata } from "@/api/metadata.ts";
-import { getSelectOptions } from "@/utils/common.ts";
+  const selectRef = ref();
+  const options = ref<Metadata[]>([]);
+  const setOption = async () => {
+    const response = await getUnit();
 
-const selectRef = ref()
-const options = ref<Metadata[]>([]);
-const setOption = async () => {
-  const response = await getUnit();
-  if (response.error) {
-    console.error(response.error);
-  } else {
-    options.value = getSelectOptions(<Metadata[]>response.data, "name", "name", {}, {
-      ignore: {
-        disabled: 1
+    options.value = getSelectOptions(
+      <Metadata[]>response,
+      'name',
+      'name',
+      {},
+      {
+        ignore: {
+          disabled: 1,
+        },
       }
-    });
-  }
-};
+    );
+  };
 
-setOption();
+  setOption();
 
+  const show = ref(false);
 
-const show = ref(false);
+  const handleAdd = () => {
+    selectRef.value?.focus();
+    show.value = true;
+  };
 
-const handleAdd = ()=>{
-  selectRef.value?.focus()
-  show.value = true
-}
+  const hideInput = () => {
+    selectRef.value?.focus();
+    show.value = false;
+  };
 
-const hideInput = () => {
-  selectRef.value?.focus()
-  show.value = false
-}
-
-const handleBlur = ()=>{
-  // show.value = false
-}
+  const handleBlur = () => {
+    // show.value = false
+  };
 </script>

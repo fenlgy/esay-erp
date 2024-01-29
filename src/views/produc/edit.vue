@@ -1,7 +1,7 @@
 <template>
   <n-layout>
     <n-layout-header bordered>
-      <n-page-header :subtitle="pageData.ename" @back="handleBack">
+      <n-page-header :subtitle="pageData.enName" @back="handleBack">
         <template #title> 新增商品 </template>
       </n-page-header>
     </n-layout-header>
@@ -12,7 +12,7 @@
             <n-input v-model:value="pageData.name" />
           </n-form-item-gi>
           <n-form-item-gi label="英文名称" path="ename" :span="8">
-            <n-input v-model:value="pageData.ename" />
+            <n-input v-model:value="pageData.enName" />
           </n-form-item-gi>
           <n-form-item-gi label="单位" path="unit" :span="8">
             <unit-select v-model:value="pageData.unit" />
@@ -37,7 +37,8 @@
 </template>
 
 <script setup lang="ts">
-  import { deleteProduct, getProductsDetail, GoodsDetail, updateProducts } from '@/api/products.ts';
+  import { deleteProduct, getProductsDetail, updateProducts } from '@/api/products.ts';
+  import { Product } from '%/database/model/product.ts';
 
   const router = useRouter();
   const route = useRoute();
@@ -47,17 +48,20 @@
 
   const id = route.params.id;
 
-  const pageData = ref(<GoodsDetail>{});
+  const pageData = ref<Product>(<Product>{});
   const getPageData = async () => {
-    const res = await getProductsDetail(Number(id));
-    pageData.value = res.data[0];
-    console.log(pageData.value);
+    pageData.value = <Product>await getProductsDetail(Number(id));
   };
 
   id && getPageData();
 
-  const handleSubmit = () => {
-    updateProducts(pageData.value);
+  const handleSubmit = async () => {
+    console.log(pageData.value);
+    const res = await updateProducts(<Product>pageData.value);
+    if (!res.error) {
+      handleBack();
+    }
+    // pageData.value.changed('enName', true);
   };
 
   const handleDelete = async () => {

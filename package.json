@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@mdi/font": "^7.3.67",
+    "@sequelize/core": "^7.0.0-alpha.35",
     "@vueuse/core": "^10.7.2",
     "core-js": "^3.8.3",
     "dayjs": "^1.11.10",
@@ -25,7 +26,8 @@
     "roboto-fontface": "^0.10.0",
     "sqlite3": "^5.1.6",
     "vue": "^3.2.13",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "xlsx": "^0.18.5"
   },
   "main": "dist-electron/main/index.js",
   "devDependencies": {

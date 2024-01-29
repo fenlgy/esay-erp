@@ -14,7 +14,7 @@
       icon: renderIcon(AlertTwotone),
     },
     {
-      label: renderRouter('/goods/list', '商品管理'),
+      label: renderRouter('/product/list', '商品管理'),
       key: 'goods-management',
       icon: renderIcon(AppstoreTwotone),
     },

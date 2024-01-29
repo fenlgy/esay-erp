@@ -35,7 +35,7 @@
 <script setup lang="ts">
   import { AnyObject, MyResponse } from '@/utils/types.ts';
   import { CloseOutlined } from '@vicons/antd';
-  import { ButtonProps } from 'naive-ui';
+  import { ButtonProps, FormValidationError } from 'naive-ui';
 
   const props = withDefaults(
     defineProps<{
@@ -58,18 +58,17 @@
       widthAddButton: false,
     }
   );
-
+  console.log(23232);
   const pageShow = defineModel('show', {
     default: false,
   });
-  // const show = defineModel<boolean>("show", { default: false });
   const formRef = ref();
   const message = useMessage();
 
   const handleSubmit = () => {
     formRef.value
       ?.validate()
-      .then(async (errors) => {
+      .then(async (errors: Array<FormValidationError>) => {
         console.log(errors);
         // emit('update:data',props.data)
         const res = await (<Promise<MyResponse<any>>>props.submit());

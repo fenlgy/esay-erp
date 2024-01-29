@@ -15,58 +15,53 @@
           <n-input v-model:value="data.sku" />
         </form-item>
       </quick-add>
+      <import-template>批量导入</import-template>
       <!--      <btn type="primary" secondary to="/goods/detail/">新增</btn>-->
     </template>
   </pages-list>
 </template>
 
 <script setup lang="ts">
-  import { addProduct, deleteProduct, getProducts, GoodsDetail } from '@/api/products.ts';
-  import { GoodsInfo } from '@/views/goods/typs.ts';
-  import { timeFormat } from '@/utils/common.ts';
+  import { addProduct, deleteProduct, getProducts } from '@/api/products.ts';
   import PagesList from '@/components/pages/pages-list.vue';
   import TableActionButtons from '@/components/basic/button/table-action-buttons.vue';
-  import TableColumnsSwitch from '@/components/basic/switch/table-columns-switch.vue';
-  import { renderTableLinkButton } from '@/utils/render.tsx';
+  import { renderTableLinkButton, renderTableSwitch } from '@/utils/render.tsx';
+  import { Product } from '%/database/model/product.ts';
+  import { formatDate } from '@/utils/formatter.ts';
 
-  const data = ref(<GoodsDetail>{});
+  const data = ref(<Product>{});
   const columns = [
     {
       title: '品名',
       key: 'name',
-      render(row: GoodsDetail) {
-        return h(renderTableLinkButton(`/goods/detail/${row.id}`, row.name));
+      render(row: Product) {
+        return h(renderTableLinkButton(`/product/detail/${row.id}`, row.name));
       },
     },
-    { title: '英文名', key: 'ename' },
+    { title: '英文名', key: 'enName' },
     { title: '单位', key: 'unit' },
     { title: 'SKU', key: 'sku' },
     {
       title: '启用',
       key: 'disabled',
-      render(row: GoodsInfo) {
-        return h(TableColumnsSwitch, {
-          modelValue: row.disabled,
-          ['onUpdate:modelValue']: (val) => (row.disabled = val),
-          id: row.id,
-          databaseTableName: 'products',
-        });
+      render(row: Product) {
+        return h(renderTableSwitch(row, Product));
       },
     },
     {
-      title: '创建时间',
-      key: 'createdTime',
-      render(row: GoodsDetail) {
-        return timeFormat(<number>row.createdTime);
+      title: '创建日期',
+      key: 'createdAt',
+      render(row: { createdAt: Date }) {
+        return formatDate(row.createdAt);
       },
     },
     {
       title: '操作',
       width: 100,
-      render(row: GoodsDetail) {
+      render(row: Product) {
         return h(TableActionButtons, {
           buttons: [
-            { type: 'edit', to: `/goods/detail/${row.id}` },
+            { type: 'edit', to: `/product/detail/${row.id}` },
             {
               type: 'delete',
               popConfirm: {

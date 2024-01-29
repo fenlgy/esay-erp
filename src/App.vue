@@ -31,7 +31,11 @@
   import Navigate from '@/layout/navigate.vue';
   import Header from '@/layout/header.vue';
   import { GlobalThemeOverrides } from 'naive-ui';
-
+  import { initSqlite3 } from '%/database';
+  import { generateSerialNumber } from '@/api/generateSerialNumber.ts';
+  initSqlite3().then(() => {
+    generateSerialNumber('salesOrder').then((r) => console.log(r));
+  });
   const theme = ref();
 
   // 增加全局重新加载方法，通过声明reload方法，控制router-view的显示或隐藏，从而控制页面路由下的组件重新加载

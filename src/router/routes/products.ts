@@ -1,21 +1,21 @@
 export default {
-  path: "/goods",
+  path: '/product',
   children: [
     {
-      path: "detail/:id*",
-      name: "goods-detail",
-      component: () => import("@/views/goods/edit.vue"),
+      path: 'detail/:id*',
+      name: 'goods-detail',
+      component: () => import('@/views/produc/edit.vue'),
       meta: {
-        title: "商品管理详情"
-      }
+        title: '商品管理详情',
+      },
     },
     {
-      path: "list",
-      name: "goods-list",
-      component: () => import("@/views/goods/list.vue"),
+      path: 'list',
+      name: 'goods-list',
+      component: () => import('@/views/produc/list.vue'),
       meta: {
-        title: "商品管理列表"
-      }
-    }
-  ]
+        title: '商品管理列表',
+      },
+    },
+  ],
 };

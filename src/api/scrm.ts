@@ -1,22 +1,27 @@
-import { connectDatabase } from "@/api/connectDatabase.ts";
-import { AnyObject, BasicDataInfo, MyResponseWithData } from "@/utils/types.ts";
+import { Cs } from '%/database/model/cs.ts';
+import { AnyObject } from '@/utils/types.ts';
 
-const tableName = "scrm";
-export const getScrmList = (params: AnyObject): Promise<MyResponseWithData<SCInfo[]>> => {
-  return connectDatabase("get", tableName, params);
+export const getScrmList = (params: AnyObject[]): Promise<Cs[]> => {
+  if (params) {
+    return Cs.findAll({
+      where: {
+        $or: params,
+      },
+    });
+  }
+  return Cs.findAll();
 };
 
-export const addScrm = (params:SCInfo)=>{
-  return connectDatabase('add',tableName,params)
-}
+export const getCsDetail = (id: number | string) => {
+  debugger;
 
-export type SCType = 0 | 1 | 2 // 0 全部 / 1 客户 / 2 供应商
-export type SCNature = 1 | 2 // 1 企业 / 2 个人
-export type SCInfo = {
-  type: SCType
-  nature: SCNature
-  name: string
-  ename: string
-  uniqueId: string
-  code: string
-} & BasicDataInfo
+  return Cs.findOne({
+    where: {
+      id: id,
+    },
+  });
+};
+
+export const addScrm = (params: Cs) => {
+  return Cs.create(params);
+};

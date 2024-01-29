@@ -1,25 +1,16 @@
-import { getDataFromDatabase } from '@/api/db.ts';
-import { MyResponse } from '@/utils/types.ts';
-import { CurrencyInfo } from '@/api/system.ts';
+import { getMetadata } from '@/api/system.ts';
 import { arr2Obj } from '@/utils/common.ts';
+import { Metadata } from '%/database/model/metadata.ts';
 
-const tableName = 'basic';
-export interface Metadata {
-  name: string;
-  ename: string;
-  code: string;
-}
-
-export const getUnit = (): Promise<MyResponse<Metadata[]>> => {
-  return getDataFromDatabase(tableName, { category: 'unit' });
+export const getUnit = (): Promise<Metadata[]> => {
+  return getMetadata('unit');
 };
 
-let currencyCache: CurrencyInfo[];
-export const getCurrencyList = async (): Promise<CurrencyInfo[]> => {
+let currencyCache: Metadata[];
+export const getCurrencyList = async (): Promise<Metadata[]> => {
   if (currencyCache) return currencyCache;
-  const { data } = await getDataFromDatabase(tableName, { category: 'currency' }, 'id ASC');
-  currencyCache = data;
-  return currencyCache;
+  // const { data } = await getDataFromDatabase(tableName, { category: 'currency' }, 'id ASC');
+  return (currencyCache ??= await getMetadata('currency'));
 };
 
 export const getCurrency = async (currencyCode: string) => {

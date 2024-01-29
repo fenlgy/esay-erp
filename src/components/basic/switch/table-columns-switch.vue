@@ -1,5 +1,5 @@
 <template>
-  <n-switch :checked-value="0" :unchecked-value="1" @updateValue="handleChange" :value="modelValue">
+  <n-switch :checked-value="true" :unchecked-value="false" @updateValue="handleChange" :value="modelValue">
     <template #checked>
       <span style="font-size: 12px">启用</span>
     </template>
@@ -11,21 +11,28 @@
 
 <script setup lang="ts">
   import { SwitchProps } from 'naive-ui';
-  import { connectDatabase } from '@/api/connectDatabase.ts';
   import { MyBoolean } from '@/utils/types.ts';
+  import { ModelStatic } from '@sequelize/core';
 
   const props = defineProps<{
     modelValue?: SwitchProps['value'];
-    databaseTableName: string;
+    model: ModelStatic;
     id: number;
   }>();
 
   const emit = defineEmits(['update:modelValue']);
 
   const handleChange = async (v: MyBoolean) => {
-    const res = await connectDatabase('update', props.databaseTableName, { disabled: v, id: props.id });
-    if (!res.error) {
-      emit('update:modelValue', v);
-    }
+    // const res = await connectDatabase('update', props.databaseTableName, { disabled: v, id: props.id });
+    await props.model.update(
+      { disabled: v },
+      {
+        where: {
+          id: props.id,
+        },
+      }
+    );
+    emit('update:modelValue', v);
+    $myMessage.success('小主，更新成功啦！');
   };
 </script>

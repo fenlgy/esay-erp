@@ -22,7 +22,6 @@
 
 <script setup lang="ts">
   import { TableColumns } from 'naive-ui/es/data-table/src/interface';
-  import { MyResponseWithData } from '@/utils/types.ts';
 
   const props = withDefaults(
     defineProps<{
@@ -37,10 +36,10 @@
 
   const queryData = async () => {
     isLoading.value = true;
-    const res = <MyResponseWithData<any[]>>await props.getData();
+    data.value = await props.getData();
     isLoading.value = false;
-    data.value = res.data ?? res;
-    console.log(res.data);
+    // data.value = res.data ?? res;
+    // console.log(data.value);
   };
   queryData();
 </script>

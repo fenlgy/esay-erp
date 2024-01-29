@@ -6,7 +6,7 @@
           <n-input v-model:value="data.name"></n-input>
         </form-item>
         <form-item label="英文名" path="ename">
-          <n-input v-model:value="data.ename"></n-input>
+          <n-input v-model:value="data.enName"></n-input>
         </form-item>
       </quick-add>
     </template>
@@ -16,33 +16,33 @@
 <script setup lang="ts">
   import { addWarehouse, deleteWarehouse, getWarehouse } from '@/api/system.ts';
   import { renderTableSwitch } from '@/utils/render.tsx';
-  import { GoodsDetail } from '@/api/products.ts';
   import TableActionButtons from '@/components/basic/button/table-action-buttons.vue';
   import { formatDate } from '@/utils/formatter.ts';
+  import { Warehouse } from '%/database/model/warehouse.ts';
 
-  const data = ref({});
+  const data = ref(<Warehouse>{});
 
   const columns = [
     { title: '仓库', key: 'name' },
     { title: '英文名', key: 'ename' },
     {
       title: '创建时间',
-      key: 'createdTime',
-      render(row: { createdTime: number }) {
-        return formatDate(row.createdTime);
+      key: 'createdAt',
+      render(row: { createdAt: Date }) {
+        return formatDate(row.createdAt);
       },
     },
     {
       title: '启用',
       key: 'disabled',
       render(row: { id: number; disabled: number }) {
-        return h(renderTableSwitch(row, 'warehouse'));
+        return h(renderTableSwitch(row, Warehouse));
       },
     },
     {
       title: '操作',
       width: 100,
-      render(row: GoodsDetail) {
+      render(row: Warehouse) {
         return h(TableActionButtons, {
           buttons: [
             { type: 'edit', to: `/goods/detail/${row.id}` },

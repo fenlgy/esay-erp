@@ -1,7 +1,10 @@
 import { connectDatabase } from '@/api/connectDatabase.ts';
-import { AnyObject, BasicDataInfo, KVObject, MyResponseWithData } from '@/utils/types.ts';
+import { AnyObject, KVObject, MyResponseWithData } from '@/utils/types.ts';
 import { camelCase } from 'lodash';
 import { DatabaseParamsForUpdate, SQL_WHERE_UNIQ_KEY } from '@/api/db.ts';
+import { Warehouse } from '%/database/model/warehouse.ts';
+import { Metadata } from '%/database/model/metadata.ts';
+import { CreationAttributes } from '@sequelize/core';
 
 const tableName = 'system_config';
 export const setSystemConfig = (params: AnyObject) => {
@@ -34,44 +37,35 @@ export type SystemConfig = {
 };
 
 // 仓库管理 ---------------------------------------------------------
-export const getWarehouse = async (): Promise<MyResponseWithData<WareHouseInfo[]>> => {
-  return connectDatabase('get', 'warehouse');
+export const getWarehouse = async (): Promise<Warehouse[]> => {
+  return Warehouse.findAll();
 };
 
-export const addWarehouse = (params: WareHouseInfo) => {
-  return connectDatabase('add', 'warehouse', params);
+export const addWarehouse = async (params: CreationAttributes<Warehouse>) => {
+  return Warehouse.create(params);
 };
 
 export const deleteWarehouse = (id: number | string) => {
-  return connectDatabase('delete', 'warehouse', id);
+  return Warehouse.destroy({
+    where: {
+      id: id,
+    },
+  });
 };
 
-export type WareHouseInfo = {
-  name: string;
-  ename: string;
-} & BasicDataInfo;
-
-// 单位管理 ---------------------------------------------------------
-export const getUnitList = async (): Promise<UnitInfo[]> => {
-  return connectDatabase('get', 'basic', { category: 'unit' });
+// 元数据 -----------------------------------------------------------
+export const getMetadata = (category: string) => {
+  return Metadata.findAll({
+    where: {
+      category: category,
+    },
+  });
 };
 
-export const addUnit = (params: UnitInfo) => {
-  return connectDatabase('add', 'unit', params);
+export const deleteMetadata = (id: number) => {
+  return Metadata.destroy({
+    where: {
+      id: id,
+    },
+  });
 };
-
-export const deleteUnit = (id: number | string) => {
-  return connectDatabase('delete', 'unit', id);
-};
-
-export type UnitInfo = {
-  name: string;
-  ename: string;
-} & BasicDataInfo;
-
-export type CurrencyInfo = {
-  name: string;
-  code: string;
-  symbol: string;
-  ename: string;
-} & BasicDataInfo;
