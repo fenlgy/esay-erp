@@ -1,13 +1,10 @@
 import { Cs } from '%/database/model/cs.ts';
 import { AnyObject } from '@/utils/types.ts';
+import { Op } from '@sequelize/core';
 
-export const getScrmList = (params: AnyObject[]): Promise<Cs[]> => {
-  if (params) {
-    return Cs.findAll({
-      where: {
-        $or: params,
-      },
-    });
+export const getScrmList = (options: AnyObject): Promise<Cs[]> => {
+  if (options) {
+    return Cs.findAll(options);
   }
   return Cs.findAll();
 };

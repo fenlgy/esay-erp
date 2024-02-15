@@ -1,24 +1,24 @@
 export default {
-  path: '/purchase',
+  path: '/sales',
   children: [
     {
       path: 'detail/:id*',
-      name: 'purchase-detail',
+      name: 'sales-order-detail',
       component: () => import('@/views/purchase/orders/edit.vue'),
       meta: {
-        title: '采购计划列表',
+        title: '商品管理详情',
       },
     },
     {
       path: 'order',
-      name: 'purchase-order',
+      name: 'sales-order',
       children: [
         {
           path: 'list',
-          name: 'purchase-order-list',
-          component: () => import('@/views/purchase/orders/list.vue'),
+          name: 'sales-order-list',
+          component: () => import('@/views/sales/orders/list.vue'),
           meta: {
-            title: '采购订单列表',
+            title: '销售订单列表',
           },
         },
       ],

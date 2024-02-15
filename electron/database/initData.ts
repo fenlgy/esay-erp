@@ -1,5 +1,7 @@
 import { Metadata } from './model/metadata';
 import { SerialNumber } from './model/serial-number';
+import { Product } from './model/product';
+import { Cs } from './model/cs';
 
 export const initData = async () => {
   await Metadata.bulkCreate([
@@ -14,6 +16,12 @@ export const initData = async () => {
       name: '箱',
       enName: 'carton',
       code: 'CTN',
+    },
+    {
+      category: 'unit',
+      name: '个',
+      enName: 'unit',
+      code: 'UNIT',
     },
     {
       category: 'currency',
@@ -34,4 +42,6 @@ export const initData = async () => {
     { module: 'purchaseOrder', prefix: 'PO' },
     { module: 'salesOrder', prefix: 'SO' },
   ]);
+  await Product.bulkCreate([{ name: '榴莲王', sku: 'LIULIANGWANG', unit: '个' }]);
+  await Cs.bulkCreate([{ name: '卡卡西', type: 0, nature: 1 }]);
 };

@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { numberToFixedLength } from '@/utils/common.ts';
 import { SerialNumber } from '%/database/model/serial-number.ts';
 
-export const generateSerialNumber = async (module: 'purchaseOrder' | 'salesOrder', length: number = 4) => {
+export const generateSerialNumber = async (module: 'purchaseOrder' | 'salesOrder', length: number = 4): Promise<string> => {
   function getCurrentDate() {
     return dayjs().format('YYYYMM');
   }

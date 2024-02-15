@@ -28,7 +28,7 @@
       {},
       {
         ignore: {
-          disabled: 1,
+          disabled: true,
         },
       }
     );

@@ -1,5 +1,5 @@
 <template>
-  <pages-list :get-data="getPurchaseOrderList" :columns="columns">
+  <pages-list :get-data="getSalesOrderList" :columns="columns">
     <template #buttons>
       <n-button @click="handleAddOrder" type="primary">新增</n-button>
     </template>
@@ -9,12 +9,12 @@
 </template>
 
 <script setup lang="ts">
-  import { getPurchaseOrderList } from '@/api/purchase.ts';
-  import Edit from '@/views/purchase/orders/edit.vue';
+  import { getSalesOrderList } from '@/api/sales.ts';
+  import Edit from './edit.vue';
   import { NButton } from 'naive-ui';
   import dayjs from 'dayjs';
   import Detail from './ditail.vue';
-  import { PurchaseOrder } from '%/database/model/purchase-order.ts';
+  import { SalesOrder } from '%/database/model/sales-order.ts';
 
   const orderId = ref<number>();
   const showEdit = ref();
@@ -39,7 +39,7 @@
     {
       title: '订单号',
       key: 'orderNumber',
-      render(row: PurchaseOrder) {
+      render(row: SalesOrder) {
         return h(
           NButton,
           {
@@ -51,7 +51,7 @@
         );
       },
     },
-    { title: '供应商', key: 'supplier' },
+    { title: '客户', key: 'client' },
     { title: '币别', key: 'currency' },
     {
       title: '总金额',

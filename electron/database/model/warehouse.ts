@@ -1,5 +1,6 @@
 import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional, Sequelize } from '@sequelize/core';
 import { Attribute, PrimaryKey, AutoIncrement, NotNull, Table, Unique, CreatedAt, Index, Default } from '@sequelize/core/decorators-legacy';
+import dayjs from 'dayjs';
 
 // @Table({ schema: 'public' })
 export class Warehouse extends Model<InferAttributes<Warehouse>, InferCreationAttributes<Warehouse>> {
@@ -39,6 +40,6 @@ export class Warehouse extends Model<InferAttributes<Warehouse>, InferCreationAt
   declare remark: string;
 
   @Attribute(DataTypes.BOOLEAN)
-  @Default(true)
+  @Default(false)
   declare disabled: boolean;
 }

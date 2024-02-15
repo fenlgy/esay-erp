@@ -24,7 +24,7 @@
 
   const columns = [
     { title: '仓库', key: 'name' },
-    { title: '英文名', key: 'ename' },
+    { title: '英文名', key: 'enName' },
     {
       title: '创建时间',
       key: 'createdAt',

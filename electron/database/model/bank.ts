@@ -36,7 +36,7 @@ export class Bank extends Model<InferAttributes<Bank>, InferCreationAttributes<B
   declare currency: string | null;
 
   @Attribute(DataTypes.BOOLEAN)
-  @Default(true)
+  @Default(false)
   declare default: boolean;
 
   // @Attribute(DataTypes.INTEGER)

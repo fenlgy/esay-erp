@@ -14,7 +14,7 @@ export const updateProducts = async (params: Product) => {
   return generateResponse('update', Product.update(params.dataValues, { where: { id: params.id } }));
 };
 
-export const addProduct = (params: Product) => {
+export const addProduct = async (params: Product) => {
   return generateResponse('create', Product.create(params));
 };
 

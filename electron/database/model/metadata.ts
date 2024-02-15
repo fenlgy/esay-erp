@@ -31,7 +31,7 @@ export class Metadata extends Model<InferAttributes<Metadata>, InferCreationAttr
   declare symbol: string;
 
   @Attribute(DataTypes.BOOLEAN)
-  @Default(true)
+  @Default(false)
   declare disabled: boolean;
 
   // @Attribute(DataTypes.INTEGER)

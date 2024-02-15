@@ -26,6 +26,7 @@
   let currency: Record<string, CurrencyInfo>;
   const setOption = async () => {
     const response = await getCurrencyList();
+    console.log(response);
     currency = arr2Obj(response, 'code');
     options.value = getSelectOptions(
       <Metadata[]>response,
@@ -34,10 +35,11 @@
       {},
       {
         ignore: {
-          disabled: 1,
+          disabled: true,
         },
       }
     );
+    console.log(options.value);
   };
   const onUpdated = (v: string) => {
     if (currency) {

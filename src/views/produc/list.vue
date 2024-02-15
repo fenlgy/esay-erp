@@ -15,7 +15,9 @@
           <n-input v-model:value="data.sku" />
         </form-item>
       </quick-add>
-      <import-template>批量导入</import-template>
+      <import-template :header-mapping="{ 订单号: 'orderNo', 订单类型: 'orderType' }" @uploaded="(data) => console.log(data)"
+        >批量导入</import-template
+      >
       <!--      <btn type="primary" secondary to="/goods/detail/">新增</btn>-->
     </template>
   </pages-list>

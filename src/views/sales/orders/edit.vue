@@ -4,8 +4,8 @@
       <n-card title="基本信息">
         <n-grid :cols="4" :x-gap="24">
           <n-grid-item>
-            <form-item required label="供应商" path="supplier">
-              <supplier-select v-model:value="pageData.supplier" />
+            <form-item required label="客户" path="client">
+              <supplier-select v-model:value="pageData.client" />
             </form-item>
           </n-grid-item>
           <n-grid-item>
@@ -37,21 +37,21 @@
 
 <script setup lang="ts">
   import SupplierSelect from '@/components/basic/select/supplier-select.vue';
-  import { addPurchaseOrder } from '@/api/purchase.ts';
   import GoodsList from '@/views/purchase/orders/component/goods-list.vue';
   import { getSumFromArr } from '@/utils/common.ts';
   import { GoodsInOrder } from '%/database/model/goods-in-order.ts';
-  import { PurchaseOrder } from '%/database/model/purchase-order.ts';
+  import { addSalesOrder } from '@/api/sales.ts';
+  import { SalesOrder } from '%/database/model/sales-order.ts';
 
   const show = defineModel('show', {
     default: false,
   });
 
-  const pageData = ref(<PurchaseOrder>{ goodsInOrder: [{}] });
+  const pageData = ref(<SalesOrder>{ goodsInOrder: [{}] });
   const handleSubmit = async () => {
     const total = getSumFromArr(pageData.value.goodsInOrder, ['quantity', 'subtotalPrice']);
     pageData.value.goodsInOrder.forEach((item: GoodsInOrder) => (item.currency = pageData.value.currency));
     pageData.value.totalPrice = total.subtotalPrice;
-    return addPurchaseOrder(pageData.value);
+    return addSalesOrder(pageData.value);
   };
 </script>

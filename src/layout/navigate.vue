@@ -38,8 +38,8 @@
           key: 'sales-plan',
         },
         {
-          label: '销售订单',
-          key: 'sale-order',
+          label: renderRouter('/sales/order/list', '销售订单'),
+          key: 'sales-order',
         },
       ],
     },

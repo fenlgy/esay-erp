@@ -15,5 +15,6 @@ export const getCurrencyList = async (): Promise<Metadata[]> => {
 
 export const getCurrency = async (currencyCode: string) => {
   const currency = await getCurrencyList();
+  console.log(currency);
   return arr2Obj(currency, 'code')[currencyCode];
 };

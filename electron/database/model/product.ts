@@ -33,6 +33,6 @@ export class Product extends Model<InferAttributes<Product>, InferCreationAttrib
   declare factoryNumber: string;
 
   @Attribute(DataTypes.BOOLEAN)
-  @Default(true)
+  @Default(false)
   declare disabled: boolean;
 }

@@ -24,7 +24,7 @@
       console.error(response.error);
     } else {
       options.value = getSelectOptions(
-        <Metadata[]>response.data,
+        <Metadata[]>response,
         'name',
         'name',
         {},

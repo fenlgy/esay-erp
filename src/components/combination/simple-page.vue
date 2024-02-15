@@ -1,9 +1,9 @@
 <template>
   <n-button @click="() => (pageShow = true)" :type="buttonType" v-if="widthAddButton">{{ buttonName }}</n-button>
   <n-drawer v-model:show="pageShow" :width="width" :show-mask="false">
-    <n-drawer-content>
+    <n-drawer-content :header-style="{ display: 'block' }">
       <template #header>
-        <n-page-header :title="title" :subtitle="subtitle" @back="handleClose" style="width: 100%">
+        <n-page-header :title="title" :subtitle="subtitle" @back="handleClose">
           <template #back>
             <n-icon>
               <CloseOutlined />
@@ -11,6 +11,8 @@
           </template>
           <template #extra v-if="$slots.headerExtra">
             <n-space>
+              <n-button type="primary" @click="handleSubmit">提交</n-button>
+              <n-button type="primary" secondary v-if="!!save">保存草稿</n-button>
               <slot name="headerExtra" />
             </n-space>
           </template>
@@ -21,7 +23,7 @@
           <slot />
         </n-form>
       </template>
-      <template #footer>
+      <template #footer v-if="type === 'edit'">
         <n-space size="small">
           <n-button type="primary" @click="handleSubmit">提交</n-button>
           <n-button type="primary" secondary v-if="!!save">保存草稿</n-button>
@@ -79,10 +81,11 @@
           handleClose();
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        console.error(err.errors);
+      });
   };
-
-  const handleSave = () => {};
 
   const handleClose = () => {
     pageShow.value = false;

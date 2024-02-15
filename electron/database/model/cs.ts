@@ -15,11 +15,11 @@ export class Cs extends Model<InferAttributes<Cs>, InferCreationAttributes<Cs>> 
 
   @Attribute(DataTypes.INTEGER)
   @NotNull
-  declare type: SCType; // 0 全部 / 1 客户 / 2 供应商
+  declare type: CSType; // 0 全部 / 1 客户 / 2 供应商
 
   @Attribute(DataTypes.INTEGER)
   @NotNull
-  declare nature: SCNature; // 1 企业 / 2 个人
+  declare nature: CSNature; // 1 企业 / 2 个人
 
   @Attribute(DataTypes.STRING)
   @Unique
@@ -33,9 +33,9 @@ export class Cs extends Model<InferAttributes<Cs>, InferCreationAttributes<Cs>> 
   declare remark: string;
 
   @Attribute(DataTypes.BOOLEAN)
-  @Default(true)
+  @Default(false)
   declare disabled: boolean;
 }
 
-export type SCType = 0 | 1 | 2; // 0 全部 / 1 客户 / 2 供应商
-export type SCNature = 1 | 2; // 1 企业 / 2 个人
+export type CSType = 0 | 1 | 2; // 0 全部 / 1 客户 / 2 供应商
+export type CSNature = 1 | 2; // 1 企业 / 2 个人

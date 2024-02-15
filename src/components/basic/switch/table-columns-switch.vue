@@ -1,5 +1,5 @@
 <template>
-  <n-switch :checked-value="true" :unchecked-value="false" @updateValue="handleChange" :value="modelValue">
+  <n-switch :checked-value="false" :unchecked-value="true" @updateValue="handleChange" :value="modelValue">
     <template #checked>
       <span style="font-size: 12px">启用</span>
     </template>

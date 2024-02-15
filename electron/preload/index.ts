@@ -24,7 +24,7 @@
 import { initSqlite3 } from '../database';
 import { initData } from '../database/initData';
 initSqlite3().then(async (sequelize) => {
-  // await sequelize.sync({ force: true });
+  // sequelize.sync({ force: true }).then(() => initData());
   // await sequelize.sync({ alert: true });
   // initData();
 });

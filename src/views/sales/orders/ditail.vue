@@ -16,8 +16,8 @@
       <n-card title="基本信息">
         <n-grid :cols="4" :x-gap="24">
           <n-grid-item>
-            <form-item required label="供应商" path="supplier">
-              <supplier-select v-model:value="pageData.supplier" />
+            <form-item required label="客户" path="client">
+              <supplier-select v-model:value="pageData.client" />
             </form-item>
           </n-grid-item>
           <n-grid-item>
@@ -49,8 +49,9 @@
 
 <script setup lang="ts">
   import SupplierSelect from '@/components/basic/select/supplier-select.vue';
-  import { deletePurchaseOrder, getPurchaseOrderDetail, PurchaseOrder, updatePurchaseOrder } from '@/api/purchase.ts';
   import GoodsList from '@/views/purchase/orders/component/goods-list.vue';
+  import { deleteSalesOrder, getSalesOrderDetail, updateSalesOrder } from '@/api/sales.ts';
+  import { SalesOrder } from '%/database/model/sales-order.ts';
 
   const props = defineProps<{
     id: number;
@@ -61,14 +62,14 @@
 
   const currency = ref();
 
-  const pageData = ref(<PurchaseOrder>{ goodsInOrder: [{}] });
+  const pageData = ref(<SalesOrder>{ goodsInOrder: [{}] });
   const handleSubmit = async () => {
-    return updatePurchaseOrder(pageData.value);
+    return updateSalesOrder(pageData.value);
   };
 
   const message = useMessage();
   const handleDelete = async () => {
-    const res = await deletePurchaseOrder({
+    const res = await deleteSalesOrder({
       id: props.id,
       orderNumber: pageData.value.orderNumber,
     });
@@ -80,7 +81,7 @@
 
   watch(show, (v) => {
     if (v && props.id) {
-      getPurchaseOrderDetail(props.id).then((res) => {
+      getSalesOrderDetail(props.id).then((res) => {
         console.log(res);
         pageData.value = res;
       });

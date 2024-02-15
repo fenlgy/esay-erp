@@ -44,6 +44,7 @@ export const tryToGetNumberFormString = (value: string | number) => {
   if (!isNaN(Number(value))) {
     return Number(value);
   } else {
+    // console.error(`${value} 不是 number 类型`);
     return value;
   }
 };
@@ -75,13 +76,12 @@ export function getSelectOptions(
   const res: any[] = [];
   arr &&
     arr.map((item) => {
-      if (options?.ignore && matchType(item, options.ignore)) return;
-
+      if (options?.ignore && matchType(item.dataValues, options.ignore)) return;
       res.push({
         label: joinWithKeys(item, labelKeys, options?.split),
         value: joinWithKeys(item, valueKeys, '.'),
         disabled: disabled ? matchType(item, disabled) : false,
-        ...item,
+        ...item.dataValues,
       });
     });
   return res;

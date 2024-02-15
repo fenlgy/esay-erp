@@ -46,9 +46,10 @@ export async function initSqlite3() {
     await sq.authenticate();
     // 设置默认的参数
     sq.hooks.addListener('beforeFind', (v) => {
-      v.limit = 10;
+      // v.limit = 10;
       // v.order = [['createdAt', 'DESC']];
     });
+    sq.hooks.addListener('afterFind', (v) => {});
     console.log('Connection has been established successfully.');
     // await sequelize.sync({ force: true });
   } catch (error) {
